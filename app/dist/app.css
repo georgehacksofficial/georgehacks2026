@@ -181,6 +181,24 @@
   margin-right: 18px;
 }
 
+
+.page-title .wrap-btn.style3 a.tf-button {
+  min-width: 360px !important;
+  padding: 18px 48px !important;
+  font-size: 16px !important;
+  text-align: center;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Make sure the wrapper centers it */
+.page-title .wrap-btn.style3 {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 22px;
+}
+
 .tf-button {
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
@@ -911,7 +929,7 @@
   opacity: 0.5;
 }
 .main .page-title .slider-st3 {
-  padding: 299px 0 300px;
+  padding: 180px 0 300px;
   background: none;
 }
 .main .page-title .slider-st3 .overlay {
@@ -929,7 +947,7 @@
   display: flex;
 }
 .main .page-title .box-slider .content-box {
-  padding-top: 72px;
+  padding-top: 36px;
   width: 50%;
   padding-left: 41px;
 }
@@ -7189,3 +7207,4 @@ input[type=color]::placeholder {
 }
 
 /*# sourceMappingURL=app.css.map */
+
