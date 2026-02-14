@@ -13,15 +13,15 @@ Util.setAttributes = function (el, attrs) {
         this.intervalId;
         // set visible labels
         this.setVisibleLabels();
-        //create countdown HTML
+        // create countdown HTML
         this.createCountDown();
-        //store time elements
+        // store time elements
         this.days = this.element.getElementsByClassName('js-countdown__value--0')[0];
         this.hours = this.element.getElementsByClassName('js-countdown__value--1')[0];
         this.mins = this.element.getElementsByClassName('js-countdown__value--2')[0];
         this.secs = this.element.getElementsByClassName('js-countdown__value--3')[0];
         this.endTime = this.getEndTime();
-        //init counter
+        // init counter
         this.initCountDown();
     };
 
@@ -55,7 +55,6 @@ Util.setAttributes = function (el, attrs) {
         }
         // append new content to countdown element
         this.element.insertBefore(wrapper, this.element.firstChild);
-        // this.element.appendChild(wrapper);
     };
 
     CountDown.prototype.getEndTime = function () {
@@ -99,34 +98,31 @@ Util.setAttributes = function (el, attrs) {
         if (bool && days == 0 && hours == 0 && this.visibleLabels.indexOf('h') < 0) this.hours.parentElement.style.display = "none";
         if (bool && days == 0 && hours == 0 && mins == 0 && this.visibleLabels.indexOf('m') < 0) this.mins.parentElement.style.display = "none";
 
-        // this.days.textContent = days;
-        // this.hours.textContent = this.getTimeFormat(hours);
-        // this.mins.textContent = this.getTimeFormat(mins);
-        // this.secs.textContent = this.getTimeFormat(seconds);
+        this.days.textContent = days;
+        this.hours.textContent = this.getTimeFormat(hours);
+        this.mins.textContent = this.getTimeFormat(mins);
+        this.secs.textContent = this.getTimeFormat(seconds);
     };
 
     CountDown.prototype.getTimeFormat = function (time) {
         return ('0' + time).slice(-2);
     };
 
-    CountDown.prototype.emitEndEvent = function (time) {
+    CountDown.prototype.emitEndEvent = function () {
         var event = new CustomEvent('countDownFinished');
         this.element.dispatchEvent(event);
     };
 
     // Functions calling
-    window.addEventListener ('load', function () {
-        //initialize the CountDown objects
-/*        window.setTimeout(() => {*/
-            var countDown = document.getElementsByClassName('js-countdown');
-            if (countDown.length > 0) {
-                for (var i = 0; i < countDown.length; i++) {
-                    (function (i) {
-                        new CountDown(countDown[i]);
-                    })(i);
-                }
+    window.addEventListener('load', function () {
+        // initialize the CountDown objects
+        var countDown = document.getElementsByClassName('js-countdown');
+        if (countDown.length > 0) {
+            for (var i = 0; i < countDown.length; i++) {
+                (function (i) {
+                    new CountDown(countDown[i]);
+                })(i);
             }
-  /*      }, 1000);*/
-
+        }
     });
 }());

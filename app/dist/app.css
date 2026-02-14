@@ -6652,7 +6652,6 @@ img.mfp-img {
     /* display: block; */
     display: flex;
     align-items:  baseline;
-    justify-content: center;
   }
 
   .main .page-title .slider-st2 .box-slider .content-box .wrap-btn .tf-button-st2,
@@ -6664,7 +6663,6 @@ img.mfp-img {
   .main .page-title .slider-st3 .box-slider .content-box {
     padding-left: 0;
     padding-right: 0;
-    text-align: center;
   }
   .main .page-title .slider-st3 .box-slider .content-box p {
     padding: 0;
@@ -7235,7 +7233,6 @@ input[type=color]::placeholder {
   .main .page-title .box-slider .content-box .wrap-btn {
     flex-wrap: wrap;
     gap: 12px;
-    justify-content: center;
   }
   .main .page-title .box-slider .content-box .wrap-btn .tf-button,
   .main .page-title .box-slider .content-box .wrap-btn .tf-button-st2 {
