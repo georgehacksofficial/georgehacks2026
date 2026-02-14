@@ -929,7 +929,8 @@
   opacity: 0.5;
 }
 .main .page-title .slider-st3 {
-  padding: 130px 0 240px;
+  /* padding: 130px 0 240px; */
+  padding: 220px 0 290px;
   background: none;
 }
 .main .page-title .slider-st3 .overlay {
@@ -7292,3 +7293,12 @@ input[type=color]::placeholder {
 
 
 
+/* Register button length*/
+.wrap-btn.style3-container .tf-button-st2.btn-effect {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 280px;
+  padding: 10px 56px;
+  text-align: center;
+}
