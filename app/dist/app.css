@@ -7302,3 +7302,29 @@ input[type=color]::placeholder {
   padding: 10px 56px;
   text-align: center;
 }
+
+/* ===== Fix team carousel overflow glitch ===== */
+#gh-team,
+#gh-team .container-fluid,
+#gh-team .swiper-container,
+#gh-team .swiper,
+#gh-team .swiper-wrapper {
+  max-width: 100%;
+}
+
+html, body, #wrapper, #gh-team {
+  overflow-x: hidden;
+}
+
+#gh-team .swiper.mySwiper {
+  width: 100% !important;
+  overflow: hidden !important;
+}
+
+#gh-team .swiper.mySwiper1,
+#gh-team .swiper.mySwiper2 {
+  margin-bottom: 24px;
+}
+
+
+
