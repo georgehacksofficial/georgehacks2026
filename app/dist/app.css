@@ -7293,7 +7293,7 @@ input[type=color]::placeholder {
 
 
 
-/* Register button length
+/* Register button length */
 .wrap-btn.style3-container .tf-button-st2.btn-effect {
   display: inline-flex;
   align-items: center;
@@ -7301,7 +7301,7 @@ input[type=color]::placeholder {
   min-width: 280px;
   padding: 10px 56px;
   text-align: center;
-} */
+} 
 
 /* ===== Fix team carousel overflow glitch ===== */
 #gh-team,
@@ -7394,4 +7394,41 @@ html, body, #wrapper, #gh-team {
   }
 }
 
+/* register button
+ @media (max-width: 767px) {
+  .header-cta .register-btn {
+    min-width: 180px !important;  
+    padding: 10px 20px !important;
+  }
+} 
 
+@media (max-width: 767px) {
+  .header-cta .register-btn {
+    display: flex !important;
+    align-items: center !important;     
+    justify-content: center !important; 
+    text-align: center;
+  }
+
+  .header-cta .register-btn .effect {
+    width: 100%;
+    text-align: center;
+  }
+} */
+
+@media (max-width: 767px) {
+  .header-cta .register-btn {
+    min-width: 190px !important;
+    padding: 10px 20px !important;
+
+    display: flex !important;
+    align-items: center !important;     /* vertical center */
+    justify-content: center !important; /* horizontal center */
+    text-align: center;
+  }
+
+  .header-cta .register-btn .effect {
+    width: 100%;
+    text-align: center;
+  }
+}
