@@ -9,7 +9,7 @@
         @include transition3;
         position: absolute;
         content: "";
-        border: 1px solid rgba(34, 183, 143, 0.5);
+        border: 1px solid rgba(100,184,252,0.5);
         top: 0px;
         left: 0px;
         width: 100%;
@@ -19,7 +19,7 @@
         @include transition3;
         position: absolute;
         content: "";
-        border: 2px solid rgba(34, 183, 143, 0);
+        border: 2px solid rgba(100,184,252,0);
         top: 0px;
         left: 0px;
         width: 100%;
@@ -29,8 +29,8 @@
     &:hover {
         box-shadow: $box-shadow;
         &::before {
-            border-color: #14C2A3;
-            border: 2px solid #14C2A3;
+            border-color: #64b8fc;
+            border: 2px solid #64b8fc;
         }
     }
     .content {
@@ -65,7 +65,7 @@
         @include transition3;
         position: absolute;
         content: "";
-        border: 1px solid rgba(34, 183, 143, 0.5);
+        border: 1px solid rgba(100,184,252,0.5);
         top: 0px;
         left: 0px;
         width: 100%;
@@ -76,7 +76,7 @@
         @include transition5;
         position: absolute;
         content: "";
-        border: 2px solid rgba(34, 183, 143, 0);
+        border: 2px solid rgba(100,184,252,0);
         top: 0px;
         left: 0px;
         width: 100%;
@@ -87,8 +87,8 @@
     &:hover {
         box-shadow: $box-shadow;
         &::before {
-            border-color: #14C2A3;
-            border: 2px solid #14C2A3;
+            border-color: #64b8fc;
+            border: 2px solid #64b8fc;
         }
     }
     .image {
@@ -127,10 +127,10 @@
                 @include flex(center,center);
                 width: 28px;
                 height: 28px;
-                background: rgba(20,194,163,0.4);
+                background: rgba(100,184,252,0.4);
                 border-radius: 8px;
                 &:hover {
-                    background: rgba(20,194,163,1);;
+                    background: rgba(100,184,252,1);
                 }
             }
         }

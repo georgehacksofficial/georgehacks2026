@@ -50,10 +50,10 @@
   height: 52px;
   padding: 13px 15px 13px 20px;
   background: transparent;
-  color: #14C2A3;
+  color: #64b8fc;
 }
 .widget.widget-search form input:focus {
-  border-color: #14C2A3;
+  border-color: #64b8fc;
 }
 
 .widget-title {
@@ -87,7 +87,7 @@
   left: 0;
   height: 2px;
   width: 80px;
-  background: #14C2A3;
+  background: #64b8fc;
 }
 
 #sidebar .widget.widget-category.st2 {
@@ -117,10 +117,10 @@
   margin-left: 10px;
 }
 .widget-category ul li a:hover {
-  color: #14C2A3;
+  color: #64b8fc;
 }
 .widget-category ul li a:hover span {
-  color: #14C2A3;
+  color: #64b8fc;
 }
 
 .widget-recent-posts .widget-title {
@@ -174,7 +174,7 @@
   line-height: 20px;
 }
 .widget-recent-posts .recent-posts li ul.content li .meta-post li a:hover {
-  color: #14C2A3;
+  color: #64b8fc;
 }
 
 .widget-Tags .widget-title {
@@ -208,7 +208,7 @@
   color: #fff;
 }
 .widget-Tags ul li:hover {
-  background: #14C2A3;
+  background: #64b8fc;
 }
 
 .widget-social {
@@ -227,7 +227,7 @@
   transition: all 0.3s ease;
 }
 .widget-social li a:hover svg path {
-  fill: #14C2A3;
+  fill: #64b8fc;
 }
 
 /*# sourceMappingURL=side-bar.css.map */

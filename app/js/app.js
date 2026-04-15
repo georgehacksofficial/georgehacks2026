@@ -386,18 +386,6 @@
     };
 
     var goTop = function() {
-        $(window).scroll(function() {
-            if ($(this).scrollTop() > 800) {
-                $('#scroll-top').addClass('show');
-            } else {
-                $('#scroll-top').removeClass('show');
-            }
-        });
-
-        $('#scroll-top').on('click', function () {
-            $("html, body").animate({ scrollTop: 0 }, 200, 'easeInOutExpo');
-            return false;
-        });
     };
 
     var popupVideo = function () {
@@ -492,7 +480,7 @@
                 $(this).parent().toggleClass('active')
                     .children('.content-widget').slideToggle(args)
                     .children('.content-widget').slideToggle(args);
-                    this.addClass('show');
+                   $(this).addClass('show');
             } else {
                 $(this).parent().toggleClass('active');
                 $(this).next().slideToggle(args);
@@ -509,10 +497,10 @@
     };
   
     // Dom Ready
-    $(function () {
-        headerFixed();
-        mobileNav();
-        ajaxSubscribe.eventLoad();
+      $(function () {
+          headerFixed();
+          mobileNav();
+          ajaxSubscribe.eventLoad();
         ajaxContactForm();
         alertBox();
         tabs();
@@ -530,9 +518,399 @@
         $(window).on("load resize", function () {
             parallax();
         });
-        loadmore();
-        Preloader();
+          loadmore();
+          Preloader();
+          initTracksDashboard();
+          initTeamGalleryToggle();
+      });
+
+  })(jQuery);
+
+
+
+/* Tracks render logic content*/
+function initTracksDashboard() {
+  const TRACK_DOC_LINK =
+    "https://docs.google.com/document/d/1s_tQwY2wKMVUOfP0UWxWCdpEB03PZx9q/edit?usp=sharing&ouid=107506195031465198362&rtpof=true&sd=true";
+
+  const tracksData = {
+    t1: {
+      name: "TRACK 1",
+      tagline: "United Nations & Food and Agricultural Organization",
+      focus:"Food systems, global health, and equity",
+      overview:
+        "We’re working with the United Nations to explore how technology can improve access to better nutrition and healthier communities, both locally and globally.",
+      resourceTitle: "Status",
+      resourceDesc: "Problem statements will be published soon."
+      // linkText: "Open problem statements",
+      // linkHref: TRACK_DOC_LINK
+    },
+    t2: {
+      name: "TRACK 2",
+      tagline: "GW Global Food Institute",
+      focus:"Sustainable food & alternative proteins",
+      overview:
+        "This track looks at the future of food, how we can make sustainable options more accessible, affordable, and widely adopted.",
+      resourceTitle: "Status",
+      resourceDesc: "Problem statements will be published soon."
+      // linkText: "Open problem statements",
+      // linkHref: TRACK_DOC_LINK
+    },
+    t3: {
+      name: "TRACK 3",
+      tagline: "COMING SOON",
+      focus: "COMING SOON",
+      overview:
+        "COMING SOON",
+      resourceTitle: "Status",
+      resourceDesc: "Problem statements will be published soon."
+      // linkText: "Open problem statements",
+      // linkHref: TRACK_DOC_LINK
+    },
+
+  };
+
+  const buttons = document.querySelectorAll(".track-item");
+  const panel = document.getElementById("detail-panel");
+  const content = document.getElementById("panel-content");
+  const select = document.getElementById("trackSelect"); 
+
+  if (!buttons.length || !panel || !content) return;
+
+  function createEl(tag, className, text) {
+    const el = document.createElement(tag);
+    if (className) el.className = className;
+    if (text !== undefined && text !== null) el.textContent = text;
+    return el;
+  }
+
+  function render(trackId) {
+    const data = tracksData[trackId];
+    if (!data) return;
+
+    panel.classList.add("switching");
+
+    setTimeout(() => {
+      content.innerHTML = "";
+
+      const title = createEl("h3", "track-name", data.name);
+      const tagline = createEl("p", "track-tagline", data.tagline);
+
+      const grid = createEl("div", "track-content-grid");
+      const main = createEl("div", "col-main");
+      const side = createEl("div", "col-side");
+
+      const overviewLabel = createEl("span", "content-label", "Overview");
+
+      // Optional focus line
+      if (data.focus) {
+        const focusEl = createEl("p", "track-focus");
+        focusEl.innerHTML = `<strong>Focus:</strong> ${data.focus}`;
+        main.appendChild(focusEl);
+      }
+
+      const overviewText = createEl("p", "track-text", data.overview);
+
+      main.appendChild(overviewLabel);
+      main.appendChild(overviewText);
+
+      const resourcesLabel = createEl("span", "content-label", "Resources");
+      const ideas = createEl("div", "project-ideas");
+      const ideaItem = createEl("p", "idea-item");
+      const ideaTitle = createEl("span", "", data.resourceTitle);
+      ideaItem.appendChild(ideaTitle);
+      ideaItem.appendChild(document.createTextNode(` ${data.resourceDesc}`));
+      ideas.appendChild(ideaItem);
+      side.appendChild(resourcesLabel);
+      side.appendChild(ideas);
+
+      // Optional link button support (if you uncomment linkText/linkHref in data)
+      // if (data.linkText && data.linkHref) {
+      //   const link = createEl("a", "tf-button btn-effect", data.linkText);
+      //   link.href = data.linkHref;
+      //   link.target = "_blank";
+      //   link.rel = "noopener noreferrer";
+      //   side.appendChild(link);
+      // }
+
+      grid.appendChild(main);
+      grid.appendChild(side);
+
+      content.appendChild(title);
+      content.appendChild(tagline);
+      content.appendChild(grid);
+
+      panel.classList.remove("switching");
+    }, 220);
+  }
+
+  function setActiveTrack(id) {
+    buttons.forEach((b) => {
+      const active = b.getAttribute("data-track") === id;
+      b.classList.toggle("active", active);
+      b.setAttribute("aria-selected", active ? "true" : "false");
     });
 
-})(jQuery);
+    
+    if (select) select.value = id;
+  }
+
+  
+  if (select) {
+    select.innerHTML = "";
+
+    buttons.forEach((btn) => {
+      const id = btn.getAttribute("data-track");
+      if (!id) return;
+
+      const num = btn.querySelector(".track-num")?.textContent?.trim() || "";
+      const label = btn.querySelector(".track-label")?.textContent?.trim() || id;
+
+      const opt = document.createElement("option");
+      opt.value = id;
+      opt.textContent = `${num} — ${label}`;
+      select.appendChild(opt);
+    });
+
+    select.addEventListener("change", () => {
+      const id = select.value;
+      if (!id) return;
+      setActiveTrack(id);
+      render(id);
+    });
+  }
+
+  
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      const id = btn.getAttribute("data-track");
+      if (!id) return;
+      setActiveTrack(id);
+      render(id);
+    });
+  });
+
+  
+  setActiveTrack("t1");
+  render("t1");
+}
+
+
+  
+
+
+  function initTeamGalleryToggle() {
+    const selector = document.getElementById("ghTeamYearSelector");
+    if (!selector) return;
+
+    const buttons = selector.querySelectorAll(".gh-team-year-btn");
+    const galleries = document.querySelectorAll(".gh-team-gallery");
+    if (!buttons.length || !galleries.length) return;
+
+    function setActive(year) {
+      buttons.forEach(btn => {
+        const isActive = btn.dataset.year === year;
+        btn.classList.toggle("is-active", isActive);
+      });
+
+      galleries.forEach(gallery => {
+        const isActive = gallery.dataset.year === year;
+        gallery.style.display = isActive ? "" : "none";
+      });
+    }
+
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => setActive(btn.dataset.year));
+    });
+
+    setActive("2025-2026");
+
+    // Ensure Swiper recalculates after showing the default year
+    document.querySelectorAll("#gh-team .swiper").forEach((el) => {
+      if (el && el.swiper) {
+        el.swiper.update();
+        if (el.swiper.autoplay) el.swiper.autoplay.start();
+      }
+    });
+  }
+
+// =========================
+// Project Archive (2024-2025)
+// =========================
+(() => {
+  const root = document.getElementById("project-archive");
+  if (!root) return;
+
+  const DEVPOST_2025 = "https://george-hacks.devpost.com/project-gallery";
+
+  const ARCHIVE = {
+    2025: {
+      viewAll: "./pages/projects-2025.html",
+      featured: [
+        {
+          award: "Winner",
+          title: "Greenify",
+          
+          impact: "Greenify connects urban communities with real-life reforestation projects, making environmental impact accessible, social, and rewarding",
+          link: "https://devpost.com/software/greenify-4imnrx"
+        },
+          {
+          award: "Winner",
+          title: "DigitalMedics",
+          
+          impact: "DigitalMedics is a fall-detection, button-derived emergency alert system that alerts 911 authorities and personal contacts through SMS text messages",
+          link: "https://devpost.com/software/digitalmedics"
+        },
+        
+        {
+          award: "Winner",
+          title: "WellNest",
+          
+          impact: "Unlocking Open Source for Global Health - Making SDG-Aligned Projects Discoverable.",
+          link: "https://devpost.com/software/wellnest-yk4n6m"
+        },
+          {
+          award: "Winner",
+          title: "RootSync",
+         
+          impact: "AI-powered chatbot and IoT sensor system provide real-time soil data and smart crop rotation recommendations, improving yields, soil health, and farmer profits",
+          link: "https://devpost.com/software/rootsync"
+        },
+         {
+          award: "Winner",
+          title: "Medical Wallet (Track 2)",
+         
+          impact: "Medical Wallet is a blockchain-powered platform that allows patients in underserved communities control over their medical records, ensuring medical professionals can access data securely and quickly",
+          link: "https://devpost.com/software/medical-wallet-track-2",
+          align: "center"
+        }
+      ]
+    },
+    2024: {
+      viewAll: "./pages/projects-2024.html",
+      featured: [
+        {
+          award: "Winner",
+          title: "Blockchain Health Care",
+          
+          impact: "A blockchain-based healthcare platform that enables patients to securely store and share medical records with doctors across hospitals using consent-driven access control.",
+          link: "assets/project_2024/Blockchain_Health_Care_MANVIRANKAWAT.pdf"
+        },
+        {
+          award: "Runner-Up",
+          title: "FDA Compliance Checker: Gene-Us",
+          
+          impact: "A compliance analysis tool that helps evaluate FDA-related healthcare data by improving transparency, accuracy, and regulatory awareness in medical workflows.",
+          link: "assets/project_2024/FDAComplianceCheckerGeneUs_GabrielleBruce.pdf"
+        }
+      ]
+    }
+  };
+
+
+ 
+  const yearBtns = root.querySelectorAll(".ghpa-year-btn");
+  const featuredGrid = root.querySelector("#ghpaFeaturedGrid");
+  const activeYearEls = root.querySelectorAll(".ghpa-active-year");
+  const viewAllBtn = root.querySelector("#paViewAllBtn");
+
+  let currentYear = 2025;
+
+  function setActiveYear(year) {
+    currentYear = year;
+
+    yearBtns.forEach(btn =>
+      btn.classList.toggle("is-active", Number(btn.dataset.year) === year)
+    );
+
+    activeYearEls.forEach(el => (el.textContent = String(year)));
+
+    renderFeatured();
+    updateCTA();
+
+    if (window.AOS && typeof window.AOS.refreshHard === "function") {
+      window.AOS.refreshHard();
+    } else if (window.AOS && typeof window.AOS.refresh === "function") {
+      window.AOS.refresh();
+    }
+  }
+
+  function updateCTA() {
+    const data = ARCHIVE[currentYear];
+    if (!data || !viewAllBtn) return;
+
+    viewAllBtn.href = data.viewAll;
+    viewAllBtn.textContent = `View All Projects (${currentYear})`;
+  }
+
+  function renderFeatured() {
+    const data = ARCHIVE[currentYear];
+    if (!data || !featuredGrid) return;
+
+    featuredGrid.innerHTML = "";
+    const frag = document.createDocumentFragment();
+
+    data.featured.forEach(item => {
+      const card = document.createElement("article");
+      card.className = `ghpa-winner-card${item.award === "Runner-Up" ? " is-runner" : ""}`;
+      if ((item.align || "").toLowerCase() === "center") {
+        card.classList.add("is-center");
+      }
+      card.tabIndex = 0;
+      card.setAttribute("role", "button");
+      card.dataset.link = item.link;
+
+      if (item.team) {
+        const team = document.createElement("span");
+        team.className = "ghpa-team-name";
+        team.textContent = item.team;
+        card.appendChild(team);
+      }
+
+      const title = document.createElement("h3");
+      title.className = "ghpa-winner-title";
+      title.textContent = item.title || "";
+      card.appendChild(title);
+
+      const impact = document.createElement("p");
+      impact.className = "ghpa-impact-line";
+      impact.textContent = item.impact || "";
+      card.appendChild(impact);
+
+      const link = document.createElement("span");
+      link.className = "ghpa-btn";
+      link.textContent = "Open";
+      card.appendChild(link);
+
+      frag.appendChild(card);
+    });
+
+    featuredGrid.appendChild(frag);
+  }
+
+  root.addEventListener("click", (e) => {
+    const card = e.target.closest(".ghpa-winner-card");
+    if (!card || !card.dataset.link) return;
+
+    window.open(card.dataset.link, "_blank", "noopener,noreferrer");
+  });
+
+  root.addEventListener("keydown", (e) => {
+    const card = e.target.closest(".ghpa-winner-card");
+    if (!card || !card.dataset.link) return;
+    if (e.key !== "Enter" && e.key !== " ") return;
+
+    e.preventDefault();
+    window.open(card.dataset.link, "_blank", "noopener,noreferrer");
+  });
+
+  yearBtns.forEach(btn => {
+    btn.addEventListener("click", () =>
+      setActiveYear(Number(btn.dataset.year))
+    );
+  });
+
+
+  setActiveYear(2025);
+})();
 

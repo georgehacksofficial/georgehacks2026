@@ -77,7 +77,7 @@
   letter-spacing: 0;
   height: 64px;
   border: none;
-  background: #14C2A3;
+  background: #64b8fc;
   text-transform: capitalize;
   font-weight: 700;
   width: 141px;
@@ -103,7 +103,7 @@
   text-transform: capitalize;
 }
 #subscribe-form input:focus {
-  border-color: #14C2A3;
+  border-color: #64b8fc;
 }
 
 /*# sourceMappingURL=footer.css.map */

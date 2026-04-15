@@ -13,7 +13,7 @@
 .countdown__item.active, .countdown__item:hover,
 .corner-box.active,
 .corner-box:hover {
-  border-color: #14C2A3;
+  border-color: #64b8fc;
 }
 .countdown__item.active::before, .countdown__item:hover::before,
 .corner-box.active::before,
