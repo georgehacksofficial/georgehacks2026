@@ -1,0 +1,74 @@
+
+
+.gh-signin {
+  min-height: calc(100vh - 120px);
+  display: flex;
+  align-items: center;
+  padding: 80px 0;
+}
+
+.gh-signin__card {
+  background: rgba(14, 34, 48, 0.35);
+  border: 1px solid rgba(100, 184, 252, 0.35);
+  padding: 28px 26px;
+}
+
+.gh-signin__title {
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.gh-signin__label {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 12px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #B9B9BF;
+}
+
+.gh-signin__sub {
+  margin-bottom: 22px;
+  color: #B9B9BF;
+}
+
+.gh-signin__accent {
+  color: #64b8fc;
+}
+
+.gh-signin__actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.gh-signin__actions .tf-button-st2,
+.gh-signin__actions .tf-button {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+@media (min-width: 768px) {
+  .gh-signin__actions .tf-button-st2,
+  .gh-signin__actions .tf-button {
+    width: auto;
+    min-width: 220px;
+  }
+}
+
+.gh-signin__error {
+  display: none;
+  margin-top: 10px;
+  color: #ff4d4d;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.gh-signin__hint {
+  margin-top: 16px;
+  font-size: 14px;
+  color: #B9B9BF;
+}

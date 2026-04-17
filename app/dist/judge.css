@@ -1,0 +1,457 @@
+/* Judge page styles layered over app/dist/app.css */
+
+.gh-judge-section{
+  position: relative;
+  padding: 140px 0 90px;
+  background: #050505;
+  overflow: hidden;
+}
+
+.gh-judge-section .grid-bg{
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(100,184,252,.18) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(100,184,252,.18) 1px, transparent 1px);
+  background-size: 56px 56px;
+  opacity: .12;
+  pointer-events:none;
+}
+
+.gh-judge-section .scanline{
+  position:absolute;
+  left:0;
+  top:-10%;
+  width:100%;
+  height:4px;
+  background: rgba(100,184,252,.14);
+  opacity:.7;
+  pointer-events:none;
+  animation: ghJudgeScan 6s linear infinite;
+}
+
+@keyframes ghJudgeScan{
+  0% { top:-10%; }
+  100% { top:110%; }
+}
+
+.gh-judge-lead{
+  margin: 10px 0 0;
+  color: rgba(255,255,255,.75);
+  max-width: 860px;
+}
+.gh-judge-lead--center{
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.gh-judge-title{
+  margin: 6px 0 0;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* Toolbar */
+.gh-judge-toolbar{
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(100,184,252,.25);
+  box-shadow: 0 0 0 1px rgba(100,184,252,.10) inset, 0 20px 50px rgba(0,0,0,.55);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.gh-judge-toolbar__row{
+  display: grid;
+  grid-template-columns: 2fr auto auto;
+  gap: 12px;
+  align-items: end;
+}
+
+.gh-field label{
+  display:block;
+  font-size: 12px;
+  letter-spacing: .4px;
+  color: rgba(255,255,255,.75);
+  margin-bottom: 6px;
+  font-family: "IBM Plex Mono", monospace;
+}
+
+.gh-field input,
+.gh-field select,
+.gh-field textarea{
+  width: 100%;
+  background: #0b0f14;
+  border: 1px solid rgba(255,255,255,.12);
+  color: #fff;
+  padding: 10px 12px;
+  outline: none;
+  height: 44px;
+}
+
+.gh-field input:focus,
+.gh-field select:focus,
+.gh-field textarea:focus{
+  border-color: #64b8fc;
+  box-shadow: 0 0 0 3px rgba(100,184,252,.18);
+}
+
+.gh-btn-refresh{
+  height: 44px;
+  min-width: 150px;
+}
+#btnSubmitAll{
+  height: 44px;
+  min-width: 180px;
+}
+#searchInput{
+  min-width: 320px;
+}
+
+/* Meta line */
+.gh-judge-meta{
+  margin-top: 10px;
+  color: rgba(255,255,255,.68);
+  font-size: 13px;
+}
+
+.gh-judge-meta__accent{
+  color: #64b8fc;
+  font-weight: 800;
+}
+
+.gh-judge-meta__dot{
+  margin: 0 10px;
+  opacity: .5;
+}
+
+/* Panel + table */
+.gh-judge-panel{
+  background: rgba(255,255,255,.02);
+  border: 1px solid rgba(255,255,255,.10);
+  padding: 14px;
+}
+
+.gh-table-scroll{
+  overflow-x: auto;
+  border: 1px solid rgba(100,184,252,.35);
+}
+
+.gh-table{
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 920px;
+  border: none;
+}
+
+.gh-table th{
+  text-align:left;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.65);
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+
+.gh-table td{
+  padding: 12px 10px;
+  border-bottom: 1px solid rgba(255,255,255,.06);
+  color: rgba(255,255,255,.88);
+}
+
+.gh-actions{
+  display:flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Mini buttons */
+.gh-mini{
+  background: transparent;
+  border: 1px solid rgba(100,184,252,.45);
+  color: #fff;
+  padding: 6px 10px;
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all .25s ease;
+}
+.gh-actions .gh-mini{
+  padding: 8px 14px;
+  font-size: 13px;
+}
+
+.gh-mini:hover{
+  border-color: #64b8fc;
+  box-shadow: 0 0 14px rgba(100,184,252,.22);
+}
+
+.gh-mini--ghost{
+  border-color: rgba(255,255,255,.18);
+  color: rgba(255,255,255,.85);
+}
+
+.gh-mini--ghost:hover{
+  border-color: rgba(255,255,255,.28);
+  box-shadow: none;
+}
+
+/* Badges */
+.gh-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding: 3px 10px;
+  border: 1px solid rgba(255,255,255,.18);
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.gh-badge--draft{
+  color: rgba(255,255,255,.7);
+  background: rgba(255,255,255,.04);
+}
+
+.gh-badge--submitted{
+  color: rgba(100,184,252,.95);
+  background: rgba(100,184,252,.08);
+  border-color: rgba(100,184,252,.30);
+}
+
+.gh-badge--hacking{
+  color: #fff;
+  background: rgba(100,184,252,.14);
+  border-color: rgba(100,184,252,.55);
+}
+
+.gh-badge--scored{
+  color: #0b0f14;
+  background: #64b8fc;
+  border-color: rgba(100,184,252,.85);
+  font-weight: 800;
+}
+
+/* Modal */
+.gh-modal-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.82);
+  backdrop-filter: blur(6px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 18px;
+  overflow-y: auto;
+}
+
+.gh-modal-overlay.is-open{
+  display: flex;
+}
+
+body.modal-open{
+  overflow: hidden;
+  height: 100vh;
+}
+body.modal-open #wrapper{
+  overflow: hidden;
+  height: 100vh;
+}
+
+.gh-modal{
+  width: 100%;
+  max-width: 860px;
+  border: 1px solid rgba(100,184,252,.25);
+  background: rgba(255,255,255,.03);
+  padding: 18px;
+  max-height: calc(100vh - 36px);
+  overflow: auto;
+}
+
+.gh-modal__head{
+  display:flex;
+  justify-content: space-between;
+  align-items: start;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.gh-modal__kicker{
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #64b8fc;
+}
+
+.gh-modal__title{
+  margin: 0;
+  font-family: "Chakra Petch", sans-serif;
+  text-transform: uppercase;
+}
+
+.gh-modal__sub{
+  margin-top: 4px;
+  color: rgba(255,255,255,.65);
+}
+
+/* score grid */
+.gh-score-grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+
+.gh-score-wide{
+  grid-column: 1 / -1;
+}
+
+.gh-modal__footer{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+}
+
+.gh-total{
+  font-family: "IBM Plex Mono", monospace;
+  color: rgba(255,255,255,.75);
+}
+
+.gh-total__accent{
+  color: #64b8fc;
+  font-weight: 900;
+}
+
+.gh-btn-submit{
+  min-width: 220px;
+}
+
+/* Toast */
+.gh-toast{
+  position: fixed;
+  right: 18px;
+  bottom: 18px;
+  z-index: 999999;
+  background: #0b0f14;
+  border-left: 3px solid #64b8fc;
+  padding: 12px 14px;
+  color: #fff;
+  box-shadow: 0 18px 40px rgba(0,0,0,.55);
+  transform: translateY(10px);
+  opacity: 0;
+  pointer-events: none;
+  transition: all .25s ease;
+  max-width: 320px;
+}
+
+.gh-toast.is-show{
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.gh-toast.is-danger{
+  border-left-color: rgba(239,68,68,.9);
+}
+
+/* Responsive */
+@media (max-width: 991px){
+  .gh-judge-toolbar__row{
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+  .gh-judge-section{
+    padding: 120px 0 70px;
+  }
+  .gh-score-grid{
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 640px){
+  .gh-judge-section{
+    padding: 110px 0 60px;
+  }
+  .gh-judge-toolbar{
+    padding: 12px;
+  }
+  .gh-judge-toolbar__row{
+    gap: 10px;
+  }
+  #searchInput{
+    min-width: 0;
+  }
+  .gh-btn-refresh,
+  #btnSubmitAll{
+    width: 100%;
+    min-width: 0;
+  }
+  .gh-table-scroll{
+    -webkit-overflow-scrolling: touch;
+  }
+  .gh-table{
+    min-width: 0;
+  }
+  .gh-table thead{
+    display: none;
+  }
+  .gh-table,
+  .gh-table tbody,
+  .gh-table tr,
+  .gh-table td{
+    display: block;
+    width: 100%;
+  }
+  .gh-table tr{
+    border: 1px solid rgba(100,184,252,.35);
+    background: rgba(255,255,255,.02);
+    margin-bottom: 12px;
+    padding: 10px;
+    box-shadow: 0 10px 24px rgba(0,0,0,.35);
+  }
+  .gh-table td{
+    padding: 8px 6px;
+    border-bottom: none;
+    font-size: 13px;
+  }
+  .gh-table td::before{
+    content: attr(data-label);
+    display: block;
+    font-size: 11px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: rgba(255,255,255,.55);
+    margin-bottom: 2px;
+    font-family: "IBM Plex Mono", monospace;
+  }
+  .gh-actions{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .gh-actions .gh-mini{
+    width: 100%;
+  }
+  .gh-modal{
+    padding: 14px;
+  }
+  .gh-modal__head{
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .gh-modal__footer{
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .gh-btn-submit{
+    width: 100%;
+  }
+  .gh-score-grid .gh-field input,
+  .gh-score-grid .gh-field textarea{
+    font-size: 14px;
+  }
+}

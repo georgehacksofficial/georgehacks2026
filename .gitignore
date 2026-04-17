@@ -14,7 +14,9 @@ pnpm-debug.log*
 
 # Build / cache (optional, keep if you generate these locally)
 .vercel/
-dist/
+/dist/
+!app/dist/
+!app/dist/**
 build/
 .cache/
 
