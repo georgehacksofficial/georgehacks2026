@@ -17,6 +17,35 @@ const sha256Hex = async (input)=>{
   return Array.from(new Uint8Array(hash)).map((b)=>b.toString(16).padStart(2, "0")).join("");
 };
 const looksLikeEmail = (email)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+// Brevo (Sendinblue) transactional email sender for OTPs.
+const parseFrom = (from)=>{
+  const v = String(from || "").trim();
+  const m = v.match(/^(.*)<([^>]+)>$/);
+  if (!m) return { name: "", email: v };
+  return { name: m[1].trim().replace(/^"|"$/g, ""), email: m[2].trim() };
+};
+
+const sendViaBrevo = async ({ apiKey, from, to, subject, text })=>{
+  const sender = parseFrom(from);
+  const payload = {
+    sender: sender.name ? { name: sender.name, email: sender.email } : { email: sender.email },
+    to: [
+      { email: to }
+    ],
+    subject,
+    textContent: text
+  };
+  return await fetch("https://api.brevo.com/v3/smtp/email", {
+    method: "POST",
+    headers: {
+      "api-key": apiKey,
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    body: JSON.stringify(payload)
+  });
+};
 Deno.serve(async (req)=>{
   if (req.method === "OPTIONS") return new Response("ok", {
     headers: corsHeaders
@@ -26,12 +55,17 @@ Deno.serve(async (req)=>{
   });
   const supabaseUrl = Deno.env.get("SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SERVICE_ROLE_KEY");
-  const resendKey = Deno.env.get("RESEND_API_KEY");
-  const resendFrom = Deno.env.get("RESEND_FROM_EMAIL");
+  const brevoKey = Deno.env.get("BREVO_API_KEY");
+  const brevoFrom = Deno.env.get("BREVO_FROM_EMAIL");
   const ttlMinutes = Number(Deno.env.get("OTP_TTL_MINUTES") || "10");
-  if (!supabaseUrl || !serviceRoleKey || !resendKey || !resendFrom) {
+  if (!supabaseUrl || !serviceRoleKey) {
     return json(500, {
       error: "Missing required environment variables"
+    });
+  }
+  if (!brevoKey || !brevoFrom) {
+    return json(500, {
+      error: "Missing required email environment variables"
     });
   }
   let body = {};
@@ -78,18 +112,14 @@ Deno.serve(async (req)=>{
   if (upsertError) return json(500, {
     error: "Failed to store OTP"
   });
-  const emailRes = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      "Authorization": `Bearer ${resendKey}`,
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      from: resendFrom,
-      to: email,
-      subject: "Your team registration code",
-      text: `Your team registration code is ${otp}. It expires in ${ttlMinutes} minutes.`
-    })
+  const subject = "Your team registration code";
+  const text = `Your team registration code is ${otp}. It expires in ${ttlMinutes} minutes.`;
+  const emailRes = await sendViaBrevo({
+    apiKey: brevoKey,
+    from: brevoFrom,
+    to: email,
+    subject,
+    text
   });
   if (!emailRes.ok) {
     const errText = await emailRes.text();
