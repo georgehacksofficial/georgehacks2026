@@ -115,12 +115,12 @@ Deno.serve(async (req)=>{
         error: "Team name already exists. Please choose a different team name."
       });
     }
-    const dupProject = (allTeams || []).find((t)=>normText(t?.project_title) === wantedProjectTitle) || null;
-    if (dupProject) {
-      return json(409, {
-        error: "Project name already exists. Please choose a different project name."
-      });
-    }
+    // const dupProject = (allTeams || []).find((t)=>normText(t?.project_title) === wantedProjectTitle) || null;
+    // if (dupProject) {
+    //   return json(409, {
+    //     error: "Project name already exists. Please choose a different project name."
+    //   });
+    // }
     // Map each existing member email -> team (first match wins).
     const memberToTeam = new Map();
     (allTeams || []).forEach((t)=>{
