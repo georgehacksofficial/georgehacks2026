@@ -6088,12 +6088,49 @@
   margin-bottom: 40px;
 }
 
+.comimg-soon .featured-countdown.countdown--hms .countdown__timer {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  gap: 38px;
+}
+
+/* Always hide the Days box for the hero countdown (we only show H/M/S). */
+.comimg-soon .featured-countdown.countdown--hms .countdown__item:first-child {
+  display: none !important;
+}
+
+.comimg-soon .featured-countdown.countdown--hms .countdown__item {
+  margin: 0;
+}
+
 .comimg-soon .featured-countdown ul {
   display: flex;
   align-items: center;
   justify-content: center;
   padding-left: 18px;
   margin-top: 4px;
+}
+
+.comimg-soon .featured-countdown.countdown--hms ul.desc {
+  display: grid;
+  grid-template-columns: repeat(3, 80px);
+  gap: 38px;
+  padding-left: 0;
+  margin-top: 10px;
+}
+
+.comimg-soon .featured-countdown.countdown--hms ul.desc li {
+  margin: 0;
+  text-align: center;
+}
+
+@media (max-width: 767px) {
+  .comimg-soon .featured-countdown.countdown--hms .countdown__timer {
+    gap: 22px;
+  }
+  .comimg-soon .featured-countdown.countdown--hms ul.desc {
+    gap: 22px;
+  }
 }
 
 .comimg-soon .featured-countdown ul li {
