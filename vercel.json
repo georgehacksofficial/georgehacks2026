@@ -1,0 +1,13 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "redirects": [
+    { "source": "/dashboard", "destination": "/pages/dashboard", "permanent": true },
+    { "source": "/admin", "destination": "/pages/admin", "permanent": true },
+    { "source": "/create-team", "destination": "/pages/create_team", "permanent": true },
+    { "source": "/judge", "destination": "/pages/judge", "permanent": true },
+    { "source": "/signin", "destination": "/pages/signin", "permanent": true },
+    { "source": "/reset-password", "destination": "/pages/reset-password", "permanent": true }
+  ]
+}
+

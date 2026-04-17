@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>George Hacks | Judge Panel</title>
+  <meta name="description" content="George Hacks Judge Panel: assigned teams, scoring, and submissions." />
+
+  <!-- Match index.html -->
+  <link rel="stylesheet" href="../app/bootstrap/css/bootstrap.css" />
+  <link rel="stylesheet" href="../app/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../app/dist/app.css" />
+  <link rel="stylesheet" href="../assets/font/font-awesome.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <!-- Page-specific -->
+  <link rel="stylesheet" href="../app/dist/judge.css" />
+
+  <link rel="shortcut icon" href="../assets/images/last.svg" />
+  <link rel="apple-touch-icon-precomposed" href="../assets/images/last.svg" />
+</head>
+
+<body class="header-fixed main inner-page">
+  <div class="preload preload-container">
+    <div class="preload-logo"></div>
+  </div>
+
+  <div id="wrapper">
+    <!-- Header (same pattern as index.html) -->
+    <header id="header_main" class="header">
+      <div class="container">
+        <div id="site-header-inner">
+          <!-- <div class="header__logo">
+            <a href="../index.html"><img src="../assets/images/logo/logo.png" alt="George Hacks" /></a>
+          </div> -->
+
+          <nav id="main-nav" class="main-nav">
+            <ul id="menu-primary-menu" class="menu">
+              <li class="menu-item"><a href="../index.html#home">Home</a></li>
+              <li class="menu-item"><a href="../index.html#about">About</a></li>
+              <li class="menu-item"><a href="../index.html#tracks">Tracks</a></li>
+              <li class="menu-item"><a href="../index.html#faqs">FAQs</a></li>
+             
+              <li class="menu-item current-menu-item"><a href="./judge.html">Judge</a></li>
+            </ul>
+          </nav>
+
+          <div class="header-cta">
+            <button class="tf-button btn-effect" type="button" id="judgeSignoutBtn">
+              <span class="boder-fade"></span>
+              <span class="effect">Sign Out</span>
+            </button>
+          </div>
+
+          <div class="mobile-button"><span></span></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Judge Section -->
+    <section class="gh-judge-section">
+      <div class="grid-bg" aria-hidden="true"></div>
+      <!-- <div class="scanline" aria-hidden="true"></div> -->
+
+      <div class="container">
+        <div class="tf-title m-b40" data-aos="fade-up" data-aos-duration="800">
+          
+          <h3 class="title">Judge Panel</h3>
+          
+          <h4 class="gh-judge-title gh-judge-lead--center" style="margin-top:6px;">
+            Welcome <span id="judgeName" class="gh-judge-meta__accent">-</span>
+          </h4>
+        </div>
+
+        <!-- Judge selector + filters -->
+        <div class="gh-judge-toolbar" data-aos="fade-up" data-aos-duration="900">
+          <div class="gh-judge-toolbar__row">
+            <div class="gh-field">
+              <label>Search</label>
+              <input id="searchInput" type="text" placeholder="Search team or project..." />
+            </div>
+
+            <button class="tf-button btn-effect gh-btn-refresh" id="btnRefresh" type="button">
+              <span class="boder-fade"></span>
+              <span class="effect">Refresh</span>
+            </button>
+            <button class="tf-button-st2 btn-effect gh-btn-submit" id="btnSubmitAll" type="button">
+              <span class="boder-fade"></span>
+              <span class="effect">Submit All Scores</span>
+            </button>
+          </div>
+
+          <div class="gh-judge-meta">
+            Showing <span id="countShown" class="gh-judge-meta__accent">0</span> teams
+            <span class="gh-judge-meta__dot">&bull;</span>
+            Assigned: <span id="countAssigned" class="gh-judge-meta__accent">0</span>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="gh-judge-panel" data-aos="fade-up" data-aos-duration="900">
+          <div class="gh-table-scroll">
+            <table class="gh-table">
+              <thead>
+                <tr>
+                  <th>Team</th>
+                  <th>Project</th>
+                  <th>Status</th>
+                  <th>Total Score</th>
+                  <th>Last Scored By</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="teamsBody"></tbody>
+            </table>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Modal -->
+    <div class="gh-modal-overlay" id="scoreModal" aria-hidden="true">
+      <div class="gh-modal card">
+        <div class="gh-modal__head">
+          <div>
+            <div class="gh-modal__kicker">Scoring</div>
+            <h5 class="gh-modal__title" id="modalTitle">Team</h5>
+            <div class="gh-modal__sub" id="modalSub">Project</div>
+          </div>
+          <button class="gh-mini gh-mini--ghost" type="button" id="btnCloseModal">Close</button>
+        </div>
+
+        <div class="gh-modal__body">
+          <div class="gh-score-grid">
+            <div class="gh-field">
+              <label>Innovation (0-10)</label>
+              <input class="scoreInput" type="number" min="0" max="10" value="0" />
+            </div>
+            <div class="gh-field">
+              <label>Technical Difficulty (0-10)</label>
+              <input class="scoreInput" type="number" min="0" max="10" value="0" />
+            </div>
+            <div class="gh-field">
+              <label>Impact (0-10)</label>
+              <input class="scoreInput" type="number" min="0" max="10" value="0" />
+            </div>
+            <div class="gh-field">
+              <label>UX/Design (0-10)</label>
+              <input class="scoreInput" type="number" min="0" max="10" value="0" />
+            </div>
+            <div class="gh-field gh-score-wide">
+              <label>Presentation (0-10)</label>
+              <input class="scoreInput" type="number" min="0" max="10" value="0" />
+            </div>
+            <div class="gh-field gh-score-wide">
+              <label>Comments</label>
+              <textarea id="scoreComments" rows="3" placeholder="Optional notes..."></textarea>
+            </div>
+          </div>
+
+          <div class="gh-modal__footer">
+            <div class="gh-total">
+              Total: <span id="totalScore" class="gh-total__accent">0</span> / 50
+            </div>
+
+            <button class="tf-button-st2 btn-effect gh-btn-submit" type="button" id="btnSubmitScore">
+              <span class="boder-fade"></span>
+              <span class="effect">Submit Score</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="ghToast" class="gh-toast" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <script src="../app/js/jquery.min.js"></script>
+  <script src="../app/js/gh-config.js"></script>
+  <script src="../app/js/gh-fetch.js"></script>
+  <script src="../app/js/app.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script type="module" src="../app/js/judge.js"></script>
+</body>
+</html>

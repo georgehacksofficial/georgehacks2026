@@ -1,1 +1,34 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment
+.env
+.env.*
+
+# Build / cache (optional, keep if you generate these locally)
+.vercel/
+dist/
+build/
+.cache/
+
+# OS / editor
 .DS_Store
+Thumbs.db
+.vscode/
+!.vscode/settings.json
+!.vscode/extensions.json
+
+# Supabase local state
+supabase/.temp/
+
+# Supabase CLI generated
+supabase/.branches/
+supabase/.schemas/
+supabase/.cache/

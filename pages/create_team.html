@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>George Hacks | Register Team</title>
+  <meta name="description" content="George Hacks Team Registration: verify email via OTP, then create your team." />
+
+  <!-- Match index.html -->
+  <link rel="stylesheet" href="../app/bootstrap/css/bootstrap.css" />
+  <link rel="stylesheet" href="../app/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../app/dist/app.css" />
+  <link rel="stylesheet" href="../assets/font/font-awesome.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <!-- Page-specific -->
+  <link rel="stylesheet" href="../app/dist/createteam.css" />
+
+  <link rel="shortcut icon" href="../assets/images/last.svg" />
+  <link rel="apple-touch-icon-precomposed" href="../assets/images/last.svg" />
+</head>
+
+<body class="header-fixed main inner-page">
+  <div class="preload preload-container">
+    <div class="preload-logo"></div>
+  </div>
+
+  <div id="wrapper">
+    <!-- Header -->
+    <header id="header_main" class="header">
+      <div class="container">
+        <div id="site-header-inner">
+          <nav id="main-nav" class="main-nav">
+            <ul id="menu-primary-menu" class="menu">
+              <li class="menu-item"><a href="../index.html#home">Home</a></li>
+              <li class="menu-item"><a href="../index.html#about">About</a></li>
+              <li class="menu-item"><a href="../index.html#tracks">Tracks</a></li>
+              <li class="menu-item"><a href="../index.html#roadmap">Roadmap</a></li>
+              <li class="menu-item"><a href="../index.html#faqs">FAQs</a></li>
+              <!-- <li class="menu-item current-menu-item"><a href="./create_team.html">Register Team</a></li> -->
+            </ul>
+          </nav>
+
+          <div class="header-cta">
+            <a class="tf-button btn-effect" href="../index.html">
+              <span class="boder-fade"></span>
+              <span class="effect">Back</span>
+            </a>
+          </div>
+
+          <div class="mobile-button"><span></span></div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Content -->
+    <section class="gh-create-section">
+      <div class="grid-bg" aria-hidden="true"></div>
+
+      <div class="container">
+        <div class="tf-title m-b40" data-aos="fade-up" data-aos-duration="800">
+          <h3 class="title">Register Team</h3>
+          <p class="gh-create-lead">
+            Verify your email to continue. After verification, you can create your team and add members.
+          </p>
+        </div>
+
+        <div class="row justify-content-center" data-aos="fade-up" data-aos-duration="900">
+          <div class="col-lg-7 col-md-9">
+            <div class="corner-box gh-create-card">
+
+              <!-- Step 1: Email -->
+              <div id="emailStep">
+                <div class="gh-create-kicker">Step 1</div>
+                <h4 class="gh-create-title">Enter Your Email</h4>
+
+                <div class="gh-field">
+                  <label for="regEmail">Email</label>
+                  <input id="regEmail" type="email" placeholder="you@email.com" autocomplete="email" />
+                </div>
+
+                <div class="gh-create-actions">
+                  <button class="tf-button-st2 btn-effect" type="button" id="btnSendOtp">
+                    <span class="boder-fade"></span>
+                    <span class="effect">Send OTP</span>
+                  </button>
+                </div>
+
+                <div id="emailMsg" class="gh-create-msg" aria-live="polite"></div>
+              </div>
+
+              <!-- Step 2: Verify -->
+              <div id="otpStep" style="display:none; margin-top:18px;">
+                <div class="gh-create-kicker">Step 2</div>
+                <h4 class="gh-create-title">Verify OTP</h4>
+
+                <div class="gh-field">
+                  <label for="otpCode">Email OTP</label>
+                  <input id="otpCode" type="text" placeholder="Enter the 6-digit code" autocomplete="one-time-code" />
+                </div>
+
+                <div class="gh-create-actions">
+                  <button class="tf-button-st2 btn-effect" type="button" id="btnVerifyOtp">
+                    <span class="boder-fade"></span>
+                    <span class="effect">Verify Code</span>
+                  </button>
+                </div>
+
+                <div id="otpMsg" class="gh-create-msg" aria-live="polite"></div>
+              </div>
+
+              <!-- Step 3: Create Team -->
+              <div id="teamStep" style="display:none; margin-top:22px;">
+                <div class="gh-create-kicker">Step 3</div>
+                <h4 class="gh-create-title">Create Team</h4>
+
+                <div class="gh-field">
+                  <label for="teamName">Team Name</label>
+                  <input id="teamName" type="text" placeholder="Skyline" />
+                </div>
+                <div class="gh-field">
+                  <label for="teamTrack">Choose Track</label>
+                  <select id="teamTrack">
+                    <option value="">Select a track</option>
+                    <option value="track1">Track 1-United Nations & Food and Agricultural Organization</option>
+                    <option value="track2">Track 2-GW Global Food Institute</option>
+                    <option value="track3">Track 3-Coming Soon</option>
+                  </select>
+                </div>
+                <div class="gh-field">
+                  <label for="problemStatement">Problem Statement</label>
+                  <select id="problemStatement" disabled>
+                    <option value="">Select a track first</option>
+                  </select>
+                </div>
+                
+                <div class="gh-field" style="display:none;">
+                  <label for="projectName">Project Name</label>
+                  <input id="projectName" type="text" placeholder="Air Monitor" />
+                </div>
+
+                <div class="gh-create-split">
+                  <div class="gh-field">
+                    <label for="memberName">Member Name</label>
+                    <input id="memberName" type="text" placeholder="Alice" />
+                  </div>
+                  <div class="gh-field">
+                    <label for="memberEmail">Member Email</label>
+                    <input id="memberEmail" type="email" placeholder="alice@email.com" />
+                  </div>
+                </div>
+
+                <div class="gh-create-actions">
+                  <button class="gh-mini" type="button" id="btnAddMember">Add Member</button>
+                </div>
+                <div id="memberList" class="gh-create-memberlist"></div>
+
+                <div class="gh-create-actions" style="margin-top:14px;">
+                  <button class="tf-button-st2 btn-effect" type="button" id="btnCreateTeam">
+                    <span class="boder-fade"></span>
+                    <span class="effect">Create Team</span>
+                  </button>
+                </div>
+
+                <div id="teamMsg" class="gh-create-msg" aria-live="polite"></div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    
+    <div id="ghToast" class="gh-toast" aria-live="polite" aria-atomic="true"></div>
+  </div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="../app/js/gh-config.js"></script>
+  <script src="../app/js/gh-fetch.js"></script>
+  <script type="module" src="../app/js/create-team.js"></script>
+</body>
+</html>

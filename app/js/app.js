@@ -530,8 +530,21 @@
 
 /* Tracks render logic content*/
 function initTracksDashboard() {
+  // Supabase Storage (public bucket) for track resources (PDFs, etc).
+  // Upload PDFs to the bucket + paths below and the UI will render download buttons.
+  const SUPABASE_URL = (window.GH_CONFIG && window.GH_CONFIG.SUPABASE_URL) || "https://gtuytjhvjdpwtubaxnrg.supabase.co";
+  const STORAGE_BUCKET = (window.GH_CONFIG && window.GH_CONFIG.STORAGE_BUCKET) || "gh-resources";
   const TRACK_DOC_LINK =
     "https://docs.google.com/document/d/1s_tQwY2wKMVUOfP0UWxWCdpEB03PZx9q/edit?usp=sharing&ouid=107506195031465198362&rtpof=true&sd=true";
+
+  function storagePublicUrl(path) {
+    const clean = String(path || "").replace(/^\/+/, "");
+    const encoded = clean
+      .split("/")
+      .map((seg) => encodeURIComponent(seg))
+      .join("/");
+    return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${encoded}`;
+  }
 
   const tracksData = {
     t1: {
@@ -568,6 +581,33 @@ function initTracksDashboard() {
       // linkHref: TRACK_DOC_LINK
     },
 
+  };
+
+  // Public download resources per track (served via Supabase Storage).
+  // Upload files to: `${STORAGE_BUCKET}/problem-statements/<track>/<file>.pdf`
+  const trackResources = {
+    t1: [
+      {
+        label: "Problem Statement 1",
+        href: storagePublicUrl("track1/Track_1_problem_statement_1.pdf"),
+        
+      },
+      {
+        label: "Problem Statement 2",
+        href: storagePublicUrl("track1/Track_1_problem_statement_2.pdf"),
+      },
+    ],
+    t2: [
+      {
+        label: "Problem Statement 1",
+        href: storagePublicUrl("track2/Track_2_problem_statement_1.pdf"),
+      },
+      {
+        label: "Problem Statement 2",
+        href: storagePublicUrl("track2/Track_2_problem_statement_2.pdf"),
+      },
+    ],
+    t3: [],
   };
 
   const buttons = document.querySelectorAll(".track-item");
@@ -615,14 +655,32 @@ function initTracksDashboard() {
       main.appendChild(overviewText);
 
       const resourcesLabel = createEl("span", "content-label", "Resources");
-      const ideas = createEl("div", "project-ideas");
-      const ideaItem = createEl("p", "idea-item");
-      const ideaTitle = createEl("span", "", data.resourceTitle);
-      ideaItem.appendChild(ideaTitle);
-      ideaItem.appendChild(document.createTextNode(` ${data.resourceDesc}`));
-      ideas.appendChild(ideaItem);
       side.appendChild(resourcesLabel);
-      side.appendChild(ideas);
+
+      // If downloads exist, only show buttons (hide the status/desc box to avoid clutter).
+      // Otherwise, fall back to the existing "Status" callout.
+      const resList = trackResources[trackId] || [];
+      if (Array.isArray(resList) && resList.length) {
+        const actions = createEl("div", "track-resource-actions");
+        resList.forEach((r) => {
+          if (!r || !r.href) return;
+          const a = createEl("a", "tf-button-st2 btn-effect", r.label || "Download");
+          a.href = r.href;
+          a.target = "_blank";
+          a.rel = "noopener noreferrer";
+          a.setAttribute("download", "");
+          actions.appendChild(a);
+        });
+        side.appendChild(actions);
+      } else {
+        const ideas = createEl("div", "project-ideas");
+        const ideaItem = createEl("p", "idea-item");
+        const ideaTitle = createEl("span", "", data.resourceTitle);
+        ideaItem.appendChild(ideaTitle);
+        ideaItem.appendChild(document.createTextNode(` ${data.resourceDesc}`));
+        ideas.appendChild(ideaItem);
+        side.appendChild(ideas);
+      }
 
       // Optional link button support (if you uncomment linkText/linkHref in data)
       // if (data.linkText && data.linkHref) {

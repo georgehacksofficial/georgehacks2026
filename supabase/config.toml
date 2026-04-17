@@ -1,0 +1,40 @@
+
+[functions.send-email-otp]
+enabled = true
+verify_jwt = true
+import_map = "./functions/send-email-otp/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/send-email-otp/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/send-email-otp/*.html" ]
+
+[functions.verify-email-otp]
+enabled = true
+verify_jwt = true
+import_map = "./functions/verify-email-otp/deno.json"
+# Uncomment to specify a custom file path to the entrypoint.
+# Supported file extensions are: .ts, .js, .mjs, .jsx, .tsx
+entrypoint = "./functions/verify-email-otp/index.ts"
+# Specifies static files to be bundled with the function. Supports glob patterns.
+# For example, if you want to serve static HTML pages in your function:
+# static_files = [ "./functions/verify-email-otp/*.html" ]
+
+[functions.dashboard-data]
+enabled = true
+verify_jwt = false
+import_map = "./functions/dashboard-data/deno.json"
+entrypoint = "./functions/dashboard-data/index.ts"
+
+[functions.update-hackathon-window]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update-hackathon-window/deno.json"
+entrypoint = "./functions/update-hackathon-window/index.ts"
+
+[functions.update-winners]
+enabled = true
+verify_jwt = true
+import_map = "./functions/update-winners/deno.json"
+entrypoint = "./functions/update-winners/index.ts"

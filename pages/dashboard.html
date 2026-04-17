@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <title>George Hacks | Live Dashboard</title>
+  <meta name="description" content="George Hacks Live Dashboard: event pulse, teams, submissions, and timeline." />
+
+  <!-- Match index.html -->
+  <link rel="stylesheet" href="../app/bootstrap/css/bootstrap.css" />
+  <link rel="stylesheet" href="../app/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="../app/dist/app.css" />
+  <link rel="stylesheet" href="../assets/font/font-awesome.css" />
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+
+  <!-- Page-specific -->
+  <link rel="stylesheet" href="../app/dist/dashboard.css" />
+
+  <link rel="shortcut icon" href="../assets/images/last.svg" />
+  <link rel="apple-touch-icon-precomposed" href="../assets/images/last.svg" />
+</head>
+
+<body class="header-fixed main inner-page">
+  <div class="preload preload-container">
+    <div class="preload-logo"></div>
+  </div>
+
+  <div id="wrapper">
+    <!-- Header -->
+    <header id="header_main" class="header">
+      <div class="container">
+        <div id="site-header-inner">
+          <div class="header-cta">
+            <a class="tf-button btn-effect gh-dash-back" href="../index.html" aria-label="Back" title="Back">
+              <span class="boder-fade"></span>
+              <span class="effect">&larr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Dashboard -->
+    <section class="gh-dash-section">
+      <div class="grid-bg" aria-hidden="true"></div>
+
+      <div class="container">
+        <div class="tf-title m-b40" data-aos="fade-up" data-aos-duration="800">
+          <div class="gh-dash-titlebar">
+            <div>
+              <h3 class="title">George Hacks</h3>
+              <div class="gh-dash-updated" id="dashUpdated"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Stats -->
+        <div class="gh-dash-stats" data-aos="fade-up" data-aos-duration="900">
+         
+          <div class="gh-dash-stat">
+            <div class="gh-dash-stat__kicker">Teams</div>
+            <div class="gh-dash-stat__value" id="statTeams">42</div>
+            <div class="gh-dash-stat__sub">Active projects building now</div>
+          </div>
+          <div class="gh-dash-stat">
+            <div class="gh-dash-stat__kicker">Members</div>
+            <div class="gh-dash-stat__value" id="statHackers">168</div>
+            <div class="gh-dash-stat__sub">Total team members</div>
+          </div>
+          <div class="gh-dash-stat">
+            <div class="gh-dash-stat__kicker">Submissions</div>
+            <div class="gh-dash-stat__value" id="statSubs">12</div>
+            <div class="gh-dash-stat__sub">Devpost / demos in progress</div>
+          </div>
+          <div class="gh-dash-stat">
+            <div class="gh-dash-stat__kicker">Judges</div>
+            <div class="gh-dash-stat__value" id="statJudges">0</div>
+            <div class="gh-dash-stat__sub">Assigned and active</div>
+          </div>
+           <div class="gh-dash-stat gh-dash-stat--timer gh-dash-stat--timer-big">
+            <div class="gh-dash-stat__kicker">Time Left</div>
+            <div class="gh-dash-timer" aria-label="Countdown timer">
+              <div class="gh-dash-timer__cell"><span id="h">22</span><span class="gh-dash-timer__unit">H</span></div>
+              <div class="gh-dash-timer__cell"><span id="m">45</span><span class="gh-dash-timer__unit">M</span></div>
+              <div class="gh-dash-timer__cell"><span id="s">12</span><span class="gh-dash-timer__unit">S</span></div>
+            </div>
+            <div class="gh-dash-stat__sub">Until submissions close</div>
+          </div>
+        </div>
+
+        
+        <div class="corner-box gh-winners" id="winnersSection" style="display:none;" data-aos="fade-up" data-aos-duration="950">
+          <div class="gh-winners__head">
+            <h5 class="gh-winners__title">Hackathon Winners</h5>
+            <span class="gh-winners__chip" id="winnersHint">Winners</span>
+          </div>
+          <div class="gh-winners__tablewrap">
+            <table class="gh-winners__table">
+              <thead>
+                <tr>
+                  <th>Place</th>
+                  <th>Track</th>
+                  <th>Statement</th>
+                  <th>Team</th>
+                  <th>Members</th>
+                </tr>
+              </thead>
+              <tbody id="winnersTbody"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Main Grid -->
+        <div class="gh-dash-grid" data-aos="fade-up" data-aos-duration="1000">
+          <div class="corner-box gh-dash-card gh-dash-card--teams">
+            <div class="gh-dash-card__head">
+              <h5 class="gh-dash-card__title" id="trackTitle">UN/FAO <span class="gh-dash-accent">Track</span></h5>
+              <span class="gh-dash-chip" id="teamsHint">Teams</span>
+            </div>
+
+            <div class="gh-dash-tabs" role="tablist" aria-label="Track selector">
+              <button class="gh-dash-tab is-active" type="button" data-track="UN/FAO">UN/FAO</button>
+              <button class="gh-dash-tab" type="button" data-track="Global Food">Global Food</button>
+              <button class="gh-dash-tab" type="button" data-track="Goodwill">Goodwill</button>
+            </div>
+
+            <p class="gh-dash-trackdesc" id="trackDesc"></p>
+
+            <div class="gh-dash-trackstats">
+              <div class="gh-dash-mini">
+                <div class="gh-dash-mini__kicker">Teams</div>
+                <div class="gh-dash-mini__value" id="trackTeams">0</div>
+              </div>
+              <div class="gh-dash-mini">
+                <div class="gh-dash-mini__kicker">Submitted</div>
+                <div class="gh-dash-mini__value" id="trackSubs">0</div>
+              </div>
+            </div>
+
+            <div class="gh-dash-teamlist" id="teamsList" aria-live="polite"></div>
+          </div>
+
+          <div class="corner-box gh-dash-card gh-dash-card--schedule">
+            <div class="gh-dash-card__head">
+              <h5 class="gh-dash-card__title">Today's Schedule</h5>
+              <span class="gh-dash-chip" id="scheduleHint">Loading...</span>
+            </div>
+            <div class="gh-dash-sched" id="scheduleList" aria-live="polite"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <script src="../app/js/gh-config.js"></script>
+  <script src="../app/js/gh-fetch.js"></script>
+  <script type="module" src="../app/js/dashboard.js"></script>
+</body>
+</html>
