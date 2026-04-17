@@ -29,7 +29,7 @@ Deno.serve(async (req)=>{
   if (!token) return json(401, {
     error: "Missing bearer token"
   });
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") || Deno.env.get("GH_SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SERVICE_ROLE_KEY");
   const maxAttempts = Number(Deno.env.get("OTP_MAX_ATTEMPTS") || "5");
   if (!supabaseUrl || !serviceRoleKey) {

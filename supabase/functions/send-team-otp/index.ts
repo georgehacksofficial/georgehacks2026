@@ -53,7 +53,7 @@ Deno.serve(async (req)=>{
   if (req.method !== "POST") return json(405, {
     error: "Method not allowed"
   });
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") || Deno.env.get("GH_SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SERVICE_ROLE_KEY");
   const brevoKey = Deno.env.get("BREVO_API_KEY");
   const brevoFrom = Deno.env.get("BREVO_FROM_EMAIL");

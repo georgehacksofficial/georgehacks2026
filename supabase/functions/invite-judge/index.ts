@@ -27,7 +27,7 @@ Deno.serve(async (req)=>{
   if (!token) return json(401, {
     error: "Missing bearer token"
   });
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
+  const supabaseUrl = Deno.env.get("SUPABASE_URL") || Deno.env.get("GH_SUPABASE_URL");
   const serviceRoleKey = Deno.env.get("SERVICE_ROLE_KEY");
   const anonKey = Deno.env.get("ANON_KEY");
   if (!supabaseUrl || !serviceRoleKey || !anonKey) {
