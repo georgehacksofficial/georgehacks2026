@@ -546,6 +546,33 @@ function initTracksDashboard() {
     return `${SUPABASE_URL}/storage/v1/object/public/${STORAGE_BUCKET}/${encoded}`;
   }
 
+  // Hide download buttons until the files are actually uploaded (avoid showing broken links in prod).
+  const __ghTrackUrlExistsCache = new Map();
+  async function urlExists(url) {
+    const u = String(url || "");
+    if (!u) return false;
+    if (__ghTrackUrlExistsCache.has(u)) return __ghTrackUrlExistsCache.get(u);
+
+    const ctrl = new AbortController();
+    const t = setTimeout(() => ctrl.abort(), 3500);
+
+    try {
+      const res = await fetch(u, {
+        method: "HEAD",
+        cache: "no-store",
+        signal: ctrl.signal,
+      });
+      const ok = !!res && res.ok;
+      __ghTrackUrlExistsCache.set(u, ok);
+      return ok;
+    } catch (_) {
+      __ghTrackUrlExistsCache.set(u, false);
+      return false;
+    } finally {
+      clearTimeout(t);
+    }
+  }
+
   const tracksData = {
     t1: {
       name: "TRACK 1",
@@ -624,11 +651,15 @@ function initTracksDashboard() {
     return el;
   }
 
+  let currentRenderToken = 0;
+
   function render(trackId) {
     const data = tracksData[trackId];
     if (!data) return;
 
     panel.classList.add("switching");
+    currentRenderToken += 1;
+    const token = currentRenderToken;
 
     setTimeout(() => {
       content.innerHTML = "";
@@ -660,26 +691,47 @@ function initTracksDashboard() {
       // If downloads exist, only show buttons (hide the status/desc box to avoid clutter).
       // Otherwise, fall back to the existing "Status" callout.
       const resList = trackResources[trackId] || [];
+
+      // Default UI: show the existing Status callout (safe fallback).
+      const ideas = createEl("div", "project-ideas");
+      const ideaItem = createEl("p", "idea-item");
+      const ideaTitle = createEl("span", "", data.resourceTitle);
+      ideaItem.appendChild(ideaTitle);
+      ideaItem.appendChild(document.createTextNode(` ${data.resourceDesc}`));
+      ideas.appendChild(ideaItem);
+      side.appendChild(ideas);
+
+      // If resource URLs exist (files uploaded), replace the Status callout with compact download buttons.
       if (Array.isArray(resList) && resList.length) {
-        const actions = createEl("div", "track-resource-actions");
-        resList.forEach((r) => {
-          if (!r || !r.href) return;
-          const a = createEl("a", "tf-button-st2 btn-effect", r.label || "Download");
-          a.href = r.href;
-          a.target = "_blank";
-          a.rel = "noopener noreferrer";
-          a.setAttribute("download", "");
-          actions.appendChild(a);
-        });
-        side.appendChild(actions);
-      } else {
-        const ideas = createEl("div", "project-ideas");
-        const ideaItem = createEl("p", "idea-item");
-        const ideaTitle = createEl("span", "", data.resourceTitle);
-        ideaItem.appendChild(ideaTitle);
-        ideaItem.appendChild(document.createTextNode(` ${data.resourceDesc}`));
-        ideas.appendChild(ideaItem);
-        side.appendChild(ideas);
+        (async () => {
+          const checks = await Promise.all(
+            resList.map(async (r) => {
+              const href = r?.href ? String(r.href) : "";
+              const ok = href ? await urlExists(href) : false;
+              return ok ? r : null;
+            })
+          );
+
+          // Ignore stale async results if user switched tracks.
+          if (token !== currentRenderToken) return;
+
+          const available = checks.filter(Boolean);
+          if (!available.length) return;
+
+          ideas.remove();
+
+          const actions = createEl("div", "track-resource-actions");
+          available.forEach((r) => {
+            if (!r || !r.href) return;
+            const a = createEl("a", "tf-button-st2 btn-effect", r.label || "Download");
+            a.href = r.href;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.setAttribute("download", "");
+            actions.appendChild(a);
+          });
+          side.appendChild(actions);
+        })();
       }
 
       // Optional link button support (if you uncomment linkText/linkHref in data)
