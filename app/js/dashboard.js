@@ -375,6 +375,18 @@ function renderTeamsList(teams, trackKey) {
   const hint = $("teamsHint");
   if (!wrap) return;
 
+  // Preserve the current "top row" across refreshes so the ticker doesn't look stuck
+  // if the board is rebuilt while it's running.
+  try {
+    const prevHead = wrap.querySelector?.('.gh-dash-ticker__track .gh-dash-flight[data-team-id]')?.getAttribute('data-team-id');
+    if (prevHead) {
+      window.__ghTeamsTicker = window.__ghTeamsTicker || { timer: null, rowH: 0 };
+      window.__ghTeamsTicker.headId = prevHead;
+    }
+  } catch {
+    // ignore query issues
+  }
+
   // Airport-style "departures board" ticker:
   // Always show teams from ALL tracks, with a track badge per row.
   // The track tabs still control the header stats, not the center ticker.
@@ -430,6 +442,19 @@ function renderTeamsList(teams, trackKey) {
     if (byTrack.other.length) interleaved.push(byTrack.other.shift());
   }
 
+  // Rotate to keep continuity if we know which team was previously at the top.
+  const existingState = window.__ghTeamsTicker;
+  const headId = existingState && existingState.headId ? String(existingState.headId) : "";
+  if (headId) {
+    const idx = interleaved.findIndex((t) => String(t?.id || "") === headId);
+    if (idx > 0) {
+      const front = interleaved.slice(idx);
+      const back = interleaved.slice(0, idx);
+      interleaved.length = 0;
+      interleaved.push(...front, ...back);
+    }
+  }
+
   const renderRow = (t) => {
     const title = `${t?.name || '-'}`;
     const project = t?.project_title ? displayProblem(t?.track, String(t.project_title)) : '';
@@ -447,7 +472,7 @@ function renderTeamsList(teams, trackKey) {
     const badge = `<span class="${trackBadgeClass(tKey)}" title="${badgeTitle}">${escapeHtml(trackLabel(tKey))}</span>`;
 
     return `
-      <div class="gh-dash-flight">
+      <div class="gh-dash-flight" data-team-id="${escapeHtml(t?.id)}">
         <div class="gh-dash-flight__col gh-dash-flight__col--track">${badge}</div>
         <div class="gh-dash-flight__col gh-dash-flight__col--stmt" title="${escapeHtml(project || '-')}">${escapeHtml(project || '-')}</div>
         <div class="gh-dash-flight__col gh-dash-flight__col--team" title="${escapeHtml(title)}">${escapeHtml(title)}</div>
@@ -484,17 +509,29 @@ function renderTeamsList(teams, trackKey) {
   // Manage a single global ticker timer.
   window.__ghTeamsTicker = window.__ghTeamsTicker || { timer: null, rowH: 0 };
   const state = window.__ghTeamsTicker;
+  try {
+    const first = track.firstElementChild;
+    if (first) state.headId = first.getAttribute('data-team-id') || state.headId || null;
+  } catch {
+    // ignore
+  }
 
   const measureRow = () => {
     const first = track.firstElementChild;
     if (!first) return 0;
-    const h = first.getBoundingClientRect().height;
+    const h = first.getBoundingClientRect().height || first.offsetHeight || 0;
     return Math.max(0, Math.round(h));
   };
 
   const rollOnce = () => {
     if (!track.firstElementChild) return;
-    if (viewport.matches(':hover')) return;
+    // Pause on hover only on devices that actually support hover (TV/touch browsers can mis-report :hover).
+    try {
+      const canHover = window.matchMedia && window.matchMedia('(hover: hover)').matches;
+      if (canHover && viewport.matches(':hover')) return;
+    } catch {
+      // ignore
+    }
     if (!state.rowH) state.rowH = measureRow();
     if (!state.rowH) return;
 
@@ -508,6 +545,12 @@ function renderTeamsList(teams, trackKey) {
       track.style.transform = 'translateY(0)';
       // Re-measure in case of wrap/responsive changes.
       state.rowH = measureRow();
+      try {
+        const head = track.firstElementChild;
+        if (head) state.headId = head.getAttribute('data-team-id') || state.headId || null;
+      } catch {
+        // ignore
+      }
     }, 620);
   };
 
@@ -702,7 +745,7 @@ function renderWinners(flags, winners, teamsById) {
     const updatedEl = $("dashUpdated");
     const refreshRateMs = 15000;
 
-    const applyDashboardData = (data) => {
+  const applyDashboardData = (data) => {
       setText("statTeams", data?.stats?.teams ?? 0);
       setText("statHackers", data?.stats?.hackers ?? 0);
       setText("statSubs", data?.stats?.submissions ?? 0);
@@ -723,7 +766,23 @@ function renderWinners(flags, winners, teamsById) {
       document.body?.classList?.add('gh-board-only');
       const t = $("trackTitle");
       if (t) t.innerHTML = `Teams <span class="gh-dash-accent">Board</span>`;
-      window.__ghRenderTeams();
+
+      // Avoid resetting the ticker on every refresh.
+      // Only rebuild the board when the team list content actually changes.
+      const sig = (teams || [])
+        .map((x) => [
+          x?.id,
+          x?.status,
+          x?.score,
+          x?.track,
+          x?.project_title,
+          x?.members_count,
+        ].join("|"))
+        .join("~");
+      if (window.__ghTeamsSig !== sig) {
+        window.__ghTeamsSig = sig;
+        window.__ghRenderTeams();
+      }
 
       if (updatedEl) {
         updatedEl.textContent = `Last updated: ${new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}`;
