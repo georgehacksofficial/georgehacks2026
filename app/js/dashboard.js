@@ -186,13 +186,11 @@ function renderSchedule(events) {
       wrap.querySelector('.gh-dash-sched__item.is-active') ||
       wrap.querySelector('.gh-dash-sched__item.is-next');
     if (!target) return;
-    try {
-      target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
-    } catch (_) {
-      // Older browsers: fall back to minimal behavior.
-      // eslint-disable-next-line no-unused-expressions
-      target.scrollIntoView && target.scrollIntoView();
-    }
+
+    // TV-friendly scrolling: set scrollTop directly for consistent behavior.
+    // Keep a small top padding so the highlighted item is clearly visible.
+    const top = Math.max(0, (target.offsetTop - wrap.offsetTop - 12));
+    wrap.scrollTop = top;
   });
 
   // "What's Next" rail removed on this dashboard variant.
