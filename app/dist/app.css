@@ -8881,6 +8881,10 @@ input[type=color]::placeholder {
   letter-spacing: 1.6px;
 }
 
+.gh-hero-register-gap {
+  margin-top: 28px;
+}
+
 .cta-container {
   margin-top: 26px;
 }

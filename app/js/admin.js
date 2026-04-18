@@ -75,6 +75,17 @@ const PROBLEM_STATEMENTS_BY_TRACK = {
   track3: ["Problem Statement 1", "Problem Statement 2"],
 };
 
+// Normalize GW student aliases: treat @gwmail.gwu.edu as @gwu.edu to prevent duplicates.
+function normalizeEmail(v) {
+  const raw = String(v || "").trim().toLowerCase();
+  const at = raw.lastIndexOf("@");
+  if (at < 0) return raw;
+  const local = raw.slice(0, at);
+  const domain = raw.slice(at + 1);
+  if (domain === "gwmail.gwu.edu") return `${local}@gwu.edu`;
+  return raw;
+}
+
 const PAGE_SIZE_TEAMS = 5;
 const PAGE_SIZE_JUDGES = 5;
 let teamsPage = 1;
@@ -365,7 +376,11 @@ $("btnAddMember").addEventListener("click", () => {
   const email = $("memberEmail").value.trim();
   if (!name || !email) return toast("Enter member name & email", true);
 
-  tempMembers.push({ name, email });
+  const normEmail = normalizeEmail(email);
+  if (tempMembers.some(m => normalizeEmail(m.email) === normEmail)) {
+    return toast("Duplicate member emails are not allowed.", true);
+  }
+  tempMembers.push({ name, email: normEmail });
   $("memberName").value = "";
   $("memberEmail").value = "";
   renderMemberList();
@@ -416,13 +431,41 @@ $("btnAddTeam").addEventListener("click", () => {
   if (tempMembers.length > MAX_MEMBERS) return toast(`Maximum ${MAX_MEMBERS} members allowed`, true);
 
   (async () => {
+    // Normalize member emails (including GW alias mapping) and block duplicates.
+    const normalizedMembers = (tempMembers || []).map(m => ({
+      name: String(m?.name || "").trim(),
+      email: normalizeEmail(m?.email),
+    })).filter(m => m.name && m.email);
+
+    const emails = normalizedMembers.map(m => m.email);
+    const unique = new Set(emails);
+    if (unique.size !== emails.length) {
+      return toast("Duplicate member emails are not allowed.", true);
+    }
+
+    // Prevent assigning a member email to multiple teams (admin-side guard).
+    // Uses the currently loaded teams list as a fast, UI-level protection.
+    const memberToTeam = new Map();
+    (teams || []).forEach(t => {
+      const mem = Array.isArray(t?.members) ? t.members : [];
+      mem.forEach(mm => {
+        const e = normalizeEmail(mm?.email);
+        if (e && !memberToTeam.has(e)) memberToTeam.set(e, t);
+      });
+    });
+    const conflict = emails.find(e => memberToTeam.has(e));
+    if (conflict) {
+      const t = memberToTeam.get(conflict);
+      return toast(`Email already belongs to team "${t?.teamName || t?.name || "-"}".`, true);
+    }
+
     const { error } = await supabase
       .from("teams")
       .insert({
         name: teamName,
         project_title: ps,
         track,
-        members: [...tempMembers],
+        members: normalizedMembers,
         status: "Draft",
       });
 
