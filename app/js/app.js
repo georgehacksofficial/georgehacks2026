@@ -624,7 +624,7 @@ function initTracksDashboard() {
     t2: [
       {
         label: "Problem Statement 2",
-        href: storagePublicUrl("track2/Track_2_problem_statement_2.gh.pdf"),
+        href: storagePublicUrl("track2/Track_2_problem_statement_2_gh.pdf"),
       },
       {
         label: "Problem Statement 3",
