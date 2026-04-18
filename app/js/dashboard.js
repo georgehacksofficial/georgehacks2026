@@ -179,6 +179,22 @@ function renderSchedule(events) {
     `;
   }).join('');
 
+  // Keep the current item visible: if there is an active event, scroll it into view.
+  // Otherwise, scroll the "next" event into view. This is safe even on TV displays.
+  requestAnimationFrame(() => {
+    const target =
+      wrap.querySelector('.gh-dash-sched__item.is-active') ||
+      wrap.querySelector('.gh-dash-sched__item.is-next');
+    if (!target) return;
+    try {
+      target.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+    } catch (_) {
+      // Older browsers: fall back to minimal behavior.
+      // eslint-disable-next-line no-unused-expressions
+      target.scrollIntoView && target.scrollIntoView();
+    }
+  });
+
   // "What's Next" rail removed on this dashboard variant.
 }
 
