@@ -598,10 +598,10 @@ function initTracksDashboard() {
     },
     t3: {
       name: "TRACK 3",
-      tagline: "COMING SOON",
-      focus: "COMING SOON",
+      tagline: "Goodwill",
+      focus: "Circular economy & reuse systems",
       overview:
-        "COMING SOON",
+        "In partnership with Goodwill, this track will challenge participants to rethink how we reduce waste and extend the life of everyday goods.",
       resourceTitle: "Status",
       resourceDesc: "Problem statements will be published soon."
       // linkText: "Open problem statements",

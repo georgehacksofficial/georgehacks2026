@@ -12,6 +12,17 @@ const json = (status, body)=>new Response(JSON.stringify(body), {
     }
   });
 const looksLikeEmail = (email)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+// Normalize GW student aliases: treat @gwmail.gwu.edu as @gwu.edu to prevent duplicates.
+const normalizeEmail = (email)=>{
+  const raw = String(email || "").trim().toLowerCase();
+  const at = raw.lastIndexOf("@");
+  if (at < 0) return raw;
+  const local = raw.slice(0, at);
+  const domain = raw.slice(at + 1);
+  if (domain === "gwmail.gwu.edu") return `${local}@gwu.edu`;
+  return raw;
+};
 Deno.serve(async (req)=>{
   if (req.method === "OPTIONS") return new Response("ok", {
     headers: corsHeaders
@@ -34,12 +45,13 @@ Deno.serve(async (req)=>{
       error: "Invalid JSON body"
     });
   }
-  const email = (body.email || "").trim().toLowerCase();
+  const emailRaw = (body.email || "").trim().toLowerCase();
+  const email = normalizeEmail(emailRaw);
   const teamName = (body.team_name || "").trim();
   const projectName = (body.project_name || "").trim();
   const track = (body.track || "").trim();
   const members = Array.isArray(body.members) ? body.members : [];
-  if (!email || !looksLikeEmail(email)) return json(400, {
+  if (!emailRaw || !looksLikeEmail(emailRaw)) return json(400, {
     error: "Valid email is required"
   });
   if (!teamName || !projectName) return json(400, {
@@ -57,7 +69,7 @@ Deno.serve(async (req)=>{
   });
   const safeMembers = members.map((m)=>({
       name: (m?.name || "").trim(),
-      email: (m?.email || "").trim().toLowerCase()
+      email: normalizeEmail((m?.email || "").trim())
     })).filter((m)=>m.name && m.email && looksLikeEmail(m.email));
   // Require the verified email to be included as a team member.
   if (!safeMembers.some((m)=>m.email === email)) {
@@ -90,7 +102,7 @@ Deno.serve(async (req)=>{
   }
   // Ensure the verified email and all provided member emails are not already
   // present in any existing team (teams.members jsonb array).
-  const normalize = (v)=>String(v || "").trim().toLowerCase();
+  const normalize = (v)=>normalizeEmail(v);
   const emailsToCheck = [
     email,
     ...safeMembers.map((m)=>m.email)
@@ -170,7 +182,7 @@ Deno.serve(async (req)=>{
         error: "Failed to validate existing team membership"
       });
     }
-    const normalize = (v)=>String(v || "").trim().toLowerCase();
+    const normalize = (v)=>normalizeEmail(v);
     const target = normalize(email);
     existingTeam = (allTeams || []).find((t)=>{
       const mem = Array.isArray(t?.members) ? t.members : [];

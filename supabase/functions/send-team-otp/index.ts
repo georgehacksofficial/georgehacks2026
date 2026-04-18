@@ -18,6 +18,17 @@ const sha256Hex = async (input)=>{
 };
 const looksLikeEmail = (email)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
 
+// Normalize GW student aliases: treat @gwmail.gwu.edu as @gwu.edu to prevent duplicates.
+const normalizeEmail = (email)=>{
+  const raw = String(email || "").trim().toLowerCase();
+  const at = raw.lastIndexOf("@");
+  if (at < 0) return raw;
+  const local = raw.slice(0, at);
+  const domain = raw.slice(at + 1);
+  if (domain === "gwmail.gwu.edu") return `${local}@gwu.edu`;
+  return raw;
+};
+
 // Brevo (Sendinblue) transactional email sender for OTPs.
 const parseFrom = (from)=>{
   const v = String(from || "").trim();
@@ -76,8 +87,9 @@ Deno.serve(async (req)=>{
       error: "Invalid JSON body"
     });
   }
-  const email = (body.email || "").trim().toLowerCase();
-  if (!email || !looksLikeEmail(email)) return json(400, {
+  const emailRaw = (body.email || "").trim().toLowerCase();
+  const email = normalizeEmail(emailRaw);
+  if (!emailRaw || !looksLikeEmail(emailRaw)) return json(400, {
     error: "Valid email is required"
   });
   const supabase = createClient(supabaseUrl, serviceRoleKey);
@@ -114,10 +126,11 @@ Deno.serve(async (req)=>{
   });
   const subject = "Your team registration code";
   const text = `Your team registration code is ${otp}. It expires in ${ttlMinutes} minutes.`;
+  // Send to what the user entered, but store/look up by normalized email.
   const emailRes = await sendViaBrevo({
     apiKey: brevoKey,
     from: brevoFrom,
-    to: email,
+    to: emailRaw,
     subject,
     text
   });

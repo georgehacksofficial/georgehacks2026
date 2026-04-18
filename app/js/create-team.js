@@ -65,7 +65,13 @@ const PROBLEM_STATEMENTS_BY_TRACK = {
 };
 
 function normalizeEmail(v) {
-  return (v || "").trim().toLowerCase();
+  const raw = (v || "").trim().toLowerCase();
+  const at = raw.lastIndexOf("@");
+  if (at < 0) return raw;
+  const local = raw.slice(0, at);
+  const domain = raw.slice(at + 1);
+  if (domain === "gwmail.gwu.edu") return `${local}@gwu.edu`;
+  return raw;
 }
 
 function renderMemberList() {

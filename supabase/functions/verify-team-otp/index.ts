@@ -17,6 +17,17 @@ const sha256Hex = async (input)=>{
   return Array.from(new Uint8Array(hash)).map((b)=>b.toString(16).padStart(2, "0")).join("");
 };
 const looksLikeEmail = (email)=>/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+// Normalize GW student aliases: treat @gwmail.gwu.edu as @gwu.edu to prevent duplicates.
+const normalizeEmail = (email)=>{
+  const raw = String(email || "").trim().toLowerCase();
+  const at = raw.lastIndexOf("@");
+  if (at < 0) return raw;
+  const local = raw.slice(0, at);
+  const domain = raw.slice(at + 1);
+  if (domain === "gwmail.gwu.edu") return `${local}@gwu.edu`;
+  return raw;
+};
 Deno.serve(async (req)=>{
   if (req.method === "OPTIONS") return new Response("ok", {
     headers: corsHeaders
@@ -40,9 +51,10 @@ Deno.serve(async (req)=>{
       error: "Invalid JSON body"
     });
   }
-  const email = (body.email || "").trim().toLowerCase();
+  const emailRaw = (body.email || "").trim().toLowerCase();
+  const email = normalizeEmail(emailRaw);
   const otp = (body.otp || "").trim();
-  if (!email || !looksLikeEmail(email)) return json(400, {
+  if (!emailRaw || !looksLikeEmail(emailRaw)) return json(400, {
     error: "Valid email is required"
   });
   if (!otp) return json(400, {
