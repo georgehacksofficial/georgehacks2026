@@ -623,18 +623,18 @@ function initTracksDashboard() {
     ],
     t2: [
       {
-        label: "Problem Statement 1",
-        href: storagePublicUrl("track2/Track_2_problem_statement_1.pdf"),
-      },
-      {
         label: "Problem Statement 2",
         href: storagePublicUrl("track2/Track_2_problem_statement_2.pdf"),
+      },
+      {
+        label: "Problem Statement 3",
+        href: storagePublicUrl("track2/Track_2_problem_statement_3.pdf"),
       },
     ],
     t3: [
        {
-        label: "Problem Statement 1",
-        href: storagePublicUrl("track3/Track_3_problem_statement_1.pdf"),
+        label: "Problem Statement 4",
+        href: storagePublicUrl("track3/Track_3_problem_statement_4.pdf"),
       },
 
     ],
