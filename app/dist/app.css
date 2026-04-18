@@ -8856,6 +8856,23 @@ input[type=color]::placeholder {
   margin-bottom: 2px;
 }
 
+.track-resource-actions {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.track-resource-actions .tf-button-st2 {
+  margin: 0;
+  padding: 10px 14px;
+  font-size: 13px;
+  letter-spacing: 1px;
+  width: auto;
+  display: inline-flex;
+}
+
 /* buttons */
 .btn-outline {
   display: inline-block;

@@ -59,9 +59,9 @@ let members = [];
 const MIN_MEMBERS = 3;
 const MAX_MEMBERS = 5;
 const PROBLEM_STATEMENTS_BY_TRACK = {
-  track1: ["Problem Statement 1", "Problem Statement 2"],
+  track1: ["Problem Statement 1"],
   track2: ["Problem Statement 1", "Problem Statement 2"],
-  track3: ["Problem Statement 1", "Problem Statement 2"],
+  track3: ["Problem Statement 1"],
 };
 
 function normalizeEmail(v) {

@@ -619,10 +619,7 @@ function initTracksDashboard() {
         href: storagePublicUrl("track1/Track_1_problem_statement_1.pdf"),
         
       },
-      {
-        label: "Problem Statement 2",
-        href: storagePublicUrl("track1/Track_1_problem_statement_2.pdf"),
-      },
+    
     ],
     t2: [
       {
@@ -634,7 +631,32 @@ function initTracksDashboard() {
         href: storagePublicUrl("track2/Track_2_problem_statement_2.pdf"),
       },
     ],
-    t3: [],
+    t3: [
+       {
+        label: "Problem Statement 1",
+        href: storagePublicUrl("track3/Track_3_problem_statement_1.pdf"),
+      },
+
+    ],
+  };
+
+  // Extra resource links (shown as small buttons in the Resources area).
+  // Paste your URLs here (leave href empty to hide that button).
+  const trackQuickLinks = {
+    t1: [
+      { label: "Devpost/Submit", href: "https://george-hacks-united-nations.devpost.com/" },
+      { label: "Problem Statement Resources", href: "https://docs.google.com/document/d/1SRXBrJwfS2TIWkqv7Va91UDtAJIoGvD-Z0_F_1TKG9c/view" },
+      
+    ],
+    t2: [
+         { label: "Devpost/Submit", href: "https://george-hacks-united-nations.devpost.com/" },
+      { label: "Problem Statement Resources", href: "https://docs.google.com/document/d/1SRXBrJwfS2TIWkqv7Va91UDtAJIoGvD-Z0_F_1TKG9c/view" },
+      
+    ],
+    t3: [
+            { label: "Devpost/Submit", href: "https://george-hacks-united-nations.devpost.com/" },
+      { label: "Problem Statement Resources", href: "https://docs.google.com/document/d/1SRXBrJwfS2TIWkqv7Va91UDtAJIoGvD-Z0_F_1TKG9c/view" },
+    ],
   };
 
   const buttons = document.querySelectorAll(".track-item");
@@ -701,7 +723,19 @@ function initTracksDashboard() {
       ideas.appendChild(ideaItem);
       side.appendChild(ideas);
 
-      // If resource URLs exist (files uploaded), replace the Status callout with compact download buttons.
+      // Actions (small buttons) - quick links are shown right away; PDF buttons appear only after upload.
+      const actions = createEl("div", "track-resource-actions");
+      const quick = (trackQuickLinks[trackId] || []).filter((x) => x && x.href);
+      quick.forEach((r) => {
+        const a = createEl("a", "tf-button-st2 btn-effect", r.label || "Open");
+        a.href = r.href;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        actions.appendChild(a);
+      });
+      if (actions.childElementCount) side.appendChild(actions);
+
+      // If PDF URLs exist (files uploaded), replace the Status callout with compact download buttons.
       if (Array.isArray(resList) && resList.length) {
         (async () => {
           const checks = await Promise.all(
@@ -719,18 +753,21 @@ function initTracksDashboard() {
           if (!available.length) return;
 
           ideas.remove();
+          // If the actions container doesn't exist yet (no quick links), create it now.
+          const host = actions.childElementCount ? actions : createEl("div", "track-resource-actions");
 
-          const actions = createEl("div", "track-resource-actions");
-          available.forEach((r) => {
+          // Prepend PDF buttons so they appear first.
+          available.slice().reverse().forEach((r) => {
             if (!r || !r.href) return;
             const a = createEl("a", "tf-button-st2 btn-effect", r.label || "Download");
             a.href = r.href;
             a.target = "_blank";
             a.rel = "noopener noreferrer";
             a.setAttribute("download", "");
-            actions.appendChild(a);
+            host.insertBefore(a, host.firstChild);
           });
-          side.appendChild(actions);
+
+          if (!host.isConnected) side.appendChild(host);
         })();
       }
 
