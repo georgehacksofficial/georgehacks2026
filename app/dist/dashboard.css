@@ -1057,11 +1057,10 @@ body.gh-board-only .gh-dash-trackstats{
     color: rgba(255,255,255,.60);
   }
 
-  .gh-winners__table td:nth-child(1)::before{ content: "Place"; }
-  .gh-winners__table td:nth-child(2)::before{ content: "Track"; }
-  .gh-winners__table td:nth-child(3)::before{ content: "Statement"; }
-  .gh-winners__table td:nth-child(4)::before{ content: "Team"; }
-  .gh-winners__table td:nth-child(5)::before{ content: "Members"; }
+  .gh-winners__table td:nth-child(1)::before{ content: "Track"; }
+  .gh-winners__table td:nth-child(2)::before{ content: "Statement"; }
+  .gh-winners__table td:nth-child(3)::before{ content: "Team"; }
+  .gh-winners__table td:nth-child(4)::before{ content: "Members"; }
 
   /* Allow long text to wrap on mobile */
   .gh-winners__track,

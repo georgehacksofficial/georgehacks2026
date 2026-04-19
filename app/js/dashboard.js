@@ -738,7 +738,6 @@ function renderWinners(flags, winners, teamsById) {
   };
 
   tbody.innerHTML = list.map((w) => {
-    const p = placeLabel(w?.place);
     const teamRow = (teamsById && w?.team_id) ? teamsById.get(String(w.team_id)) : null;
     const trackKey = String(teamRow?.track || w?.track || "").toLowerCase();
     const psStored = w?.problem_statement
@@ -752,7 +751,6 @@ function renderWinners(flags, winners, teamsById) {
     const mem = escapeHtml(membersText(w?.members));
     return `
       <tr>
-        <td class="gh-winners__place">${escapeHtml(p)}</td>
         <td class="gh-winners__track">${escapeHtml(trackName || "-")}</td>
         <td class="gh-winners__stmt">${escapeHtml(ps || "-")}</td>
         <td class="gh-winners__team" title="${escapeHtml(rawTeam)}">${team}</td>
