@@ -123,12 +123,31 @@ function renderSchedule(events) {
     .sort((a, b) => a._start.getTime() - b._start.getTime());
 
   let todays = all.filter(e => sameLocalDay(e._start, now));
+  let showingDate = now;
+
+  const isUpcomingOrActive = (e) => {
+    const start = e._start.getTime();
+    const end = (e._end ? e._end.getTime() : (start + 60 * 60 * 1000));
+    const t = now.getTime();
+    return t <= end; // includes active + upcoming (and "recent" if no end)
+  };
+
+  // If today's schedule exists but is fully finished, switch to the next upcoming day's schedule.
+  if (todays.length && !todays.some(isUpcomingOrActive)) {
+    const nextUpcoming = all.find(e => e._start.getTime() >= now.getTime()) || null;
+    if (nextUpcoming) {
+      const target = nextUpcoming._start;
+      todays = all.filter(e => sameLocalDay(e._start, target));
+      showingDate = target;
+    }
+  }
   if (!todays.length) {
     // If there are no events today, show the next upcoming day's schedule.
     const nextUpcoming = all.find(e => e._start.getTime() >= now.getTime()) || null;
     if (nextUpcoming) {
       const target = nextUpcoming._start;
       todays = all.filter(e => sameLocalDay(e._start, target));
+      showingDate = target;
       if (hint) {
         hint.textContent = `Showing: ${target.toLocaleDateString([], { month: 'short', day: 'numeric' })}`;
       }
@@ -159,8 +178,11 @@ function renderSchedule(events) {
 
   const next = nextIdx >= 0 ? todays[nextIdx] : null;
   if (hint) {
+    const datePrefix = showingDate && !sameLocalDay(showingDate, now)
+      ? ` (${showingDate.toLocaleDateString([], { month: 'short', day: 'numeric' })})`
+      : '';
     hint.textContent = next
-      ? `Next up: ${fmtTime(next.start_at)} - ${next.title}`
+      ? `Next up${datePrefix}: ${fmtTime(next.start_at)} - ${next.title}`
       : `Today: ${todays.length} events`;
   }
 
@@ -793,6 +815,17 @@ function renderWinners(flags, winners, teamsById) {
     applyDashboardData(first);
     const roadmapEvents = await loadRoadmapEvents();
     renderSchedule(roadmapEvents || []);
+    // Keep schedule highlighting and day-switching accurate on long-running TV displays.
+    window.__ghScheduleRefresh = window.__ghScheduleRefresh || { timer: null };
+    if (window.__ghScheduleRefresh.timer) clearInterval(window.__ghScheduleRefresh.timer);
+    window.__ghScheduleRefresh.timer = setInterval(() => {
+      if (document.visibilityState === "hidden") return;
+      try {
+        renderSchedule(roadmapEvents || []);
+      } catch {
+        // ignore schedule render errors
+      }
+    }, 30000);
 
     // Auto-refresh dashboard data (no full page reload).
     window.__ghDashRefresh = window.__ghDashRefresh || { timer: null };
