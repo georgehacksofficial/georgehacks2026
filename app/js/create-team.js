@@ -133,8 +133,14 @@ async function sendOtp(email) {
     body: JSON.stringify({ email }),
   });
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || "Failed to send OTP");
+    const raw = await res.text(); // Read once
+    let body = null;
+    try {
+      body = JSON.parse(raw);
+    } catch (_) {
+      body = null;
+    }
+    throw new Error(body?.error || raw || "Failed to send OTP");
   }
 }
 
@@ -164,8 +170,14 @@ async function verifyOtp(email, otp) {
     body: JSON.stringify({ email, otp }),
   });
   if (!res.ok) {
-    const text = await res.text();
-    throw new Error(text || "Failed to verify OTP");
+    const raw = await res.text(); // Read once
+    let body = null;
+    try {
+      body = JSON.parse(raw);
+    } catch (_) {
+      body = null;
+    }
+    throw new Error(body?.error || raw || "Failed to verify OTP");
   }
 }
 
