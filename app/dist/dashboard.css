@@ -17,6 +17,11 @@
   pointer-events:none;
 }
 
+/* TV/large-display polish: grid lines can create moire/banding. */
+@media (min-width: 1600px) and (min-height: 900px){
+  .gh-dash-section .grid-bg{ opacity: 0; }
+}
+
 .gh-dash-titlebar{
   display:flex;
   align-items:center;
