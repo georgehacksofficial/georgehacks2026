@@ -58,6 +58,9 @@ let verifiedEmail = "";
 let members = [];
 const MIN_MEMBERS = 3;
 const MAX_MEMBERS = 5;
+// Public team registration is controlled server-side via the `team_registration_open` flag.
+// This client-side toggle is kept as a soft-override for emergencies (defaults to open).
+const TEAM_REGISTRATION_OPEN = true;
 const PROBLEM_STATEMENTS_BY_TRACK = {
   track1: ["Problem Statement 1"],
   track2: ["Problem Statement 2", "Problem Statement 3"],
@@ -212,6 +215,12 @@ if (btnSendOtp) {
 
     const email = normalizeEmail(regEmail?.value);
     if (!email) return setMsg(emailMsg, "Enter your email.", "danger");
+
+    if (!TEAM_REGISTRATION_OPEN) {
+      setMsg(emailMsg, "Registration closed for George Hacks 2026.", "danger");
+      toast("Registration closed", true);
+      return;
+    }
 
     btnSendOtp.disabled = true;
     try {

@@ -61,6 +61,14 @@ Deno.serve(async (req)=>{
     error: "OTP is required"
   });
   const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  // Public team registration gate (does not affect admin flows).
+  // Controlled via DB: public.dashboard_flags(key='team_registration_open').
+  const { data: regFlag } = await supabase.from("dashboard_flags").select("enabled").eq("key", "team_registration_open").maybeSingle();
+  if (regFlag && regFlag.enabled === false) {
+    return json(403, { error: "Registration closed for George Hacks 2026." });
+  }
+
   const { data: row, error: rowError } = await supabase.from("team_registration_otps").select("email, otp_hash, expires_at, attempts, verified").eq("email", email).maybeSingle();
   if (rowError || !row) return json(400, {
     error: "No OTP found"

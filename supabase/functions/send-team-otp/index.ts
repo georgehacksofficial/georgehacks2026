@@ -93,6 +93,14 @@ Deno.serve(async (req)=>{
     error: "Valid email is required"
   });
   const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+  // Public team registration gate (does not affect admin flows).
+  // Controlled via DB: public.dashboard_flags(key='team_registration_open').
+  const { data: regFlag } = await supabase.from("dashboard_flags").select("enabled").eq("key", "team_registration_open").maybeSingle();
+  if (regFlag && regFlag.enabled === false) {
+    return json(403, { error: "Registration closed for George Hacks 2026." });
+  }
+
   // Basic throttle: 1 OTP per 30 seconds per email
   const { data: existing } = await supabase.from("team_registration_otps").select("last_sent_at").eq("email", email).maybeSingle();
   if (existing?.last_sent_at) {
